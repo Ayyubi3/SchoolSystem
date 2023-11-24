@@ -2,6 +2,8 @@ const fs = require("fs")
 const path = require("path")
 const LocalStrategy = require('passport-local').Strategy
 const bcrypt = require('bcrypt')
+const passport = require('passport')
+
 
 
 
@@ -50,16 +52,27 @@ async function addUser(email, password, name, id) {
 
     const Users = getUsers();
 
+    if(Users.some((user) => {return user.email === email})) {
+        console.log("User already exists")
+        return false
+
+    }
+
     try {
         const hashedPassword = await bcrypt.hash(password, 10)
+
+
+
+
         Users.push({
             id: id,
             name: name,
             email: email,
-            password: hashedPassword
+            password: hashedPassword,
+            subjects: []
         })
 
-        fs.writeFileSync(path.join(__dirname, "../Users"), JSON.stringify(Users))
+        fs.writeFileSync(path.join(__dirname, "../Users.json"), JSON.stringify(Users))
         console.log("Register successful")
         return true
     } catch (e) {
@@ -77,7 +90,7 @@ async function addUser(email, password, name, id) {
 
 function getUsers() {
 
-    return JSON.parse(fs.readFileSync(path.join(__dirname, "../Users")))
+    return JSON.parse(fs.readFileSync(path.join(__dirname, "../Users.json")))
 
 }
 
@@ -91,16 +104,8 @@ function getUserById(id) {
 }
 
 
-function checkNotAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) {
-        return res.redirect('/')
-    }
-    console.log("Not authenticated, redirect to \"/\"")
-    next()
-}
 
 
 
-
-module.exports = { addUser, initialize, checkNotAuthenticated }
+module.exports = { addUser, initialize, passport, getUsers }
 

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 1em;
+      text-align: center;
+    }
+
+    section {
+      margin: 20px;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    li {
+      margin: 5px 0;
+    }
+
+    a {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+      display: flex;
+      justify-content: space-between;
+      text-decoration: none;
+      color: black;
+    }
+  </style>
+  <title>School Subjects Dashboard</title>
+</head>
+<body>
+
+  <header>
+    <h1>School Subjects Dashboard</h1>
+  </header>
+
+  <section>
+    <h2>My Subjects</h2>
+    <ul>
+      <% Subjects.forEach((Subject => { %>
+        <li>
+          <a href="/">
+            <span><%= Subject.name %></span>
+          </a>
+        </li>
+        
+        <% })) %>
+    </ul>
+  </section>
+
+</body>
+</html>

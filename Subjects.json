@@ -1,0 +1,18 @@
+[
+    {
+        "id" : 1,
+        "name":"Mathematik",
+        "speaker": [
+            "Celal Köseoglu"
+        ],
+        "elements": []
+    },
+    {
+        "id" : 2,
+        "name":"Deutsch",
+        "speaker": [
+            "Mikail Güler"
+        ],
+        "elements": []
+    }
+]

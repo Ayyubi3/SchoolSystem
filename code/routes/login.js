@@ -1,8 +1,7 @@
 
-require('dotenv').config()
 const path = require("path")
-const { checkNotAuthenticated, addUser } = require("../LoginSystem")
-const {PATH_PUBLIC, passport} = require("../index")
+const { addUser, passport } = require("../LoginSystem")
+const { PATH_PUBLIC } = require("../index")
 
 
 
@@ -13,7 +12,7 @@ const {PATH_PUBLIC, passport} = require("../index")
 
 
 var express = require('express'),
-    router = express.Router();
+  router = express.Router();
 
 
 router
@@ -21,40 +20,71 @@ router
 
 
 
-    .get('/login', checkNotAuthenticated, (req, res) => {
-      res.render(path.join(PATH_PUBLIC, "Login", "index.ejs"), {  })
-    })
+  .get('/login', (req, res) => {
+    res.render(path.join(PATH_PUBLIC, "Login", "index.ejs"), {})
+  })
 
 
 
 
 
-    .post('/login', checkNotAuthenticated, passport.authenticate('local', {
-        successRedirect: '/',
-        failureRedirect: '/login',
-    }))
+  .post('/login', passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/login',
+  }))
 
 
-    .get('/register', checkNotAuthenticated, (req, res) => {
-      res.render(path.join(PATH_PUBLIC, "Register", "index.ejs"), {  })
-    })
+  .get('/register', (req, res) => {
+    res.render(path.join(PATH_PUBLIC, "Register", "index.ejs"), {errorMessages: req.flash("error")})
+  })
 
-    .post('/register', checkNotAuthenticated, async (req, res) => {
-
-      addUser(req.body.email, req.body.password, req.body.name, Date.now().toString()) ? res.redirect("/login") : res.redirect("/register")
-
-    })
+  .post('/register', async (req, res) => {
 
 
-    .delete('/logout', (req, res) => {
-
-        req.logout(function (err) {
-            if (err) { console.log(err); }
-        }); res.redirect('/')
-    })
-
+    const user = {
+      name: req.body.name,
+      email: req.body.email,
+      pw: req.body.password
+    }
 
 
+    //Check if name is valid
+
+    if (!(/^[A-Za-zÄäÖöÜüß ]+$/).test(user.name)) {
+
+      req.flash("error", "Name is not a valid name!")
+      return res.redirect("/register")
+    }
+    
+    if (!(/^[^\s@]+@[^\s@]+\.[^\s@]+$/).test(user.email)) {
+      
+      req.flash("error", "Email is not a valid Email!")
+      return res.redirect("/register")
+      
+    }
+    
+    
+    if (!addUser(user.email, user.pw, user.name, Date.now().toString())) 
+    {
+      req.flash("error", "Adding user failed"); 
+      console.log("asdasd")
+      return res.redirect("/register");
+    }
+
+    return res.redirect("/login")
+
+  })
 
 
-module.exports = {router};
+  .delete('/logout', (req, res) => {
+
+    req.logout(function (err) {
+      if (err) { console.log(err); }
+    }); res.redirect('/')
+  })
+
+
+
+
+
+module.exports = { router };

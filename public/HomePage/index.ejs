@@ -67,9 +67,18 @@
 
 <body>
 
+
     <header>
         <h1>Hochschule Eden</h1>
     </header>
+
+    <% if (alertMessage && alertMessage.length > 0) { console.log(alertMessage)  %>
+
+        <script>
+            alert("<%= alertMessage %>")
+        </script>
+      <% } %>
+
 
     <nav>
 
@@ -83,6 +92,7 @@
                 <a href="/login">Login</a>
                 <a href="/register">Register</a>
             <% } %>
+            <a href="/dashboard">Dashboard</a>
 
 
             
@@ -92,7 +102,7 @@
     </nav>
 
     <section>
-        <h2>Welcome to Our University <%= user %> !</h2>
+        <h2>Welcome to Our University <%= user %>!</h2>
         <p>This is a brief introduction to our university. You can add more content and sections as needed.</p>
     </section>
 
