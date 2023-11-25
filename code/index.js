@@ -63,9 +63,14 @@ app.use(dashboardrouter)
 const { courserouter } = require("./routes/courses")
 
 app.use(courserouter)
+
 const { filesrouter } = require("./routes/files")
 
 app.use(filesrouter)
+
+const { subjectsrouter } = require("./routes/subjects")
+
+app.use(subjectsrouter)
 
 
 
