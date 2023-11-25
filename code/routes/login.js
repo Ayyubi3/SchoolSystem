@@ -1,6 +1,6 @@
 
 const path = require("path")
-const { addUser, passport } = require("../LoginSystem")
+const { UserSystem, passport } = require("../LoginSystem")
 const { PATH_PUBLIC } = require("../index")
 
 
@@ -64,10 +64,9 @@ router
     }
     
     
-    if (!addUser(user.email, user.pw, user.name, Date.now().toString())) 
+    if (!UserSystem.addUser(user.email, user.pw, user.name, Date.now().toString())) 
     {
       req.flash("error", "Adding user failed"); 
-      console.log("asdasd")
       return res.redirect("/register");
     }
 

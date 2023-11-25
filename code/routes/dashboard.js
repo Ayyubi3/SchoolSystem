@@ -1,7 +1,6 @@
 
 const path = require("path")
 const { PATH_PUBLIC } = require("../index")
-const { getUsers } = require("../LoginSystem")
 
 
 
@@ -32,7 +31,7 @@ dashboardrouter
             let Subjects = JSON.parse(require("fs").readFileSync("Subjects.json"))
 
             const UserSubjects = req.user["subjects"]
-            Subjects = Subjects.filter(subject => UserSubjects.includes(subject.name));            console.log(UserSubjects)
+            Subjects = Subjects.filter(subject => UserSubjects.includes(subject.id));
             res.render(path.join(PATH_PUBLIC, "Dashboard", "index.ejs"), {Subjects})
 
         }

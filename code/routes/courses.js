@@ -1,7 +1,5 @@
+const {DB} = require("../DB")
 
-const path = require("path")
-const { PATH_PUBLIC } = require("../index")
-const { getUsers } = require("../LoginSystem")
 
 
 
@@ -29,7 +27,7 @@ courserouter
 
         } else {
 
-            const subjects = JSON.parse(require("fs").readFileSync("Subjects.json"))
+            const subjects = DB.read(DB.Databases.SUBJECTS)
             const obj = subjects.find(obj => obj.id == req.params.id)
             res.send(obj)
 

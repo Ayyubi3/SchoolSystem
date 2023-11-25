@@ -18,7 +18,6 @@ app.use(bodyParser.json());
 
 
 
-app.use(express.static(path.join(PATH_PUBLIC)))
 app.set("view-engine", "ejs")
 
 
@@ -34,10 +33,10 @@ app.use(session({
 app.use(flash())
 
 
-const {passport, initialize} = require("./LoginSystem")
+const {UserSystem, passport} = require("./LoginSystem")
 app.use(passport.initialize())
 app.use(passport.session())
-initialize(passport)
+UserSystem.initialize(passport)
 
 app.use(methodOverride('_method'))
 
@@ -64,6 +63,9 @@ app.use(dashboardrouter)
 const { courserouter } = require("./routes/courses")
 
 app.use(courserouter)
+const { filesrouter } = require("./routes/files")
+
+app.use(filesrouter)
 
 
 
