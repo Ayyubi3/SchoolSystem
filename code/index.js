@@ -43,7 +43,6 @@ app.use(methodOverride('_method'))
 
 
 
-
 app.get('/', (req, res) => {
 
   let name = ""
@@ -61,6 +60,10 @@ const { dashboardrouter } = require("./routes/dashboard")
 
 app.use(dashboardrouter)
 
+
+const { courserouter } = require("./routes/courses")
+
+app.use(courserouter)
 
 
 

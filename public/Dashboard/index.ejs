@@ -58,7 +58,7 @@
     <ul>
       <% Subjects.forEach((Subject => { %>
         <li>
-          <a href="/">
+          <a href="/courses/<%=Subject.id%>">
             <span><%= Subject.name %></span>
           </a>
         </li>

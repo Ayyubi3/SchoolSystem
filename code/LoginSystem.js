@@ -107,5 +107,5 @@ function getUserById(id) {
 
 
 
-module.exports = { addUser, initialize, passport, getUsers }
+module.exports = { addUser, initialize, passport, getUsers, authenticateUser }
 
