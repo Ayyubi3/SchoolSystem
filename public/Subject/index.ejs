@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav {
+      background-color: #333;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 24px;
+    }
+
+    .speakers {
+      font-size: 16px;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <h1>
+      <%= obj.name %>
+    </h1>
+    <div class="speakers">List of Speakers: <%= obj.speaker.join(', ') %></div>
+    <button id="postButton">JOIN</button>
+      <script>
+
+        document.getElementById('postButton').addEventListener('click', () => {
+          // Define the custom body data
+          const requestBody = {
+            id: <%=obj.id%>,
+            Useremail:`<%=Useremail%>`
+          };
+
+          // Convert the data to JSON string
+          const bodyString = JSON.stringify(requestBody);
+
+          // Send the POST request using fetch
+          fetch('/join', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: bodyString
+          })
+        });
+      </script>
+
+  </nav>
+  <%- obj.elements %>
+
+</body>
+
+</html>

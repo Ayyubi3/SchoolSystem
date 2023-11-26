@@ -23,7 +23,6 @@ app.set("view-engine", "ejs")
 
 
 
-
 app.use(express.urlencoded({ extended: false }))
 app.use(session({
   secret: process.env.SESSION_SECRET,
@@ -38,11 +37,14 @@ app.use(passport.initialize())
 app.use(passport.session())
 UserSystem.initialize(passport)
 
+
+
 app.use(methodOverride('_method'))
 
 
 
 app.get('/', (req, res) => {
+
 
   let name = ""
 
@@ -71,6 +73,14 @@ app.use(filesrouter)
 const { subjectsrouter } = require("./routes/subjects")
 
 app.use(subjectsrouter)
+
+const { createsubjectrouter } = require("./routes/createsubject")
+
+app.use(createsubjectrouter)
+
+const { joinrouter } = require("./routes/join")
+
+app.use(joinrouter)
 
 
 

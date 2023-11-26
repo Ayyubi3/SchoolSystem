@@ -1,4 +1,7 @@
 const {DB} = require("../DB")
+const path = require("path")
+const { PATH_PUBLIC } = require("../index")
+
 
 
 
@@ -22,7 +25,8 @@ courserouter
 
         const subjects = DB.read(DB.Databases.SUBJECTS)
         const obj = subjects.find(obj => obj.id == req.params.id)
-        res.send(obj)
+
+        res.render(path.join(PATH_PUBLIC, "Subject", "index.ejs"), {obj, Useremail: req.user["email"]})
 
 
 

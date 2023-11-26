@@ -26,7 +26,7 @@ var express = require('express'),
 
         const Subjects = DB.read(DB.Databases.SUBJECTS)
 
-        res.render(path.join(PATH_PUBLIC, "SubjectList", "index.ejs"), {Subjects})
+        res.render(path.join(PATH_PUBLIC, "SubjectList", "index.ejs"), {Subjects, loggedIn: req.isAuthenticated()})
 
 
 

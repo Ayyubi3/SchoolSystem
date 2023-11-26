@@ -17,10 +17,21 @@ class DB {
         fs.writeFileSync(Database, JSON.stringify(obj))
     }
 
-    static add(Database, obj)
+    static add(Database, obj, dupetest)
     {
-
+        
         const content = this.read(Database)
+
+
+        // Check for duplicates using the dupetest function
+        if (dupetest && typeof dupetest === 'function') {
+            const isDuplicate = dupetest(obj, content);
+            if (isDuplicate) {
+                console.log('Duplicate found. Object not added.');
+                return;
+            }
+        }
+
         content.push(obj)
 
         this.writeAll(Database, content)

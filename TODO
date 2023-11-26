@@ -1,0 +1,6 @@
+- Everytime if one of the DBs is accessed, check if input is duplicate
+- Display HTML saved in "elements"
+- if subject is deleted, delete every entry in Users (Maybe check everytime the server is restarted)
+- XSS over Subject custom HTML direct injection active
+- Create a subject that explains how to create subjects 
+- Add Button to join subject
