@@ -24,8 +24,6 @@
   "devDependencies": {
     "nodemon": "^3.0.1"
   },
-
-
   "nodemonConfig": {
     "ext": "js",
     "verbose": true
