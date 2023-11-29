@@ -78,9 +78,6 @@ const { createsubjectrouter } = require("./routes/createsubject")
 
 app.use(createsubjectrouter)
 
-const { joinrouter } = require("./routes/join")
-
-app.use(joinrouter)
 
 
 

@@ -65,7 +65,10 @@ class UserSystem {
                 subjects: []
             })
     
-            DB.writeAll(DB.Databases.USERS, USERS)
+            DB.writeAll(DB.Databases.USERS, Users, (obj, content) => { 
+                content.find(element => {element.email == obj.email})
+
+             })
             console.log("Register successful")
             return true
         } catch (e) {

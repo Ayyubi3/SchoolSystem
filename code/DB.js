@@ -30,6 +30,8 @@ class DB {
                 console.log('Duplicate found. Object not added.');
                 return;
             }
+        } else {
+            console.log("No dupetest")
         }
 
         content.push(obj)
