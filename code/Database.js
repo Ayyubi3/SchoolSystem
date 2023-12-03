@@ -19,7 +19,7 @@ class Database {
 
     try {
       let res = await this.client.query(inpt, args)
-      console.log(JSON.stringify(res) + "\n")
+      //console.log(JSON.stringify(res) + "\n")
       return res
     } catch (error) {
       console.log(error)
@@ -84,6 +84,32 @@ class DBHelper {
     }
   }
 
+  async SubjectCreate(id, name, html_markdown_code) {
+
+    console.log("DBHelper.SubjectCreate")
+    console.log(id)
+
+    const res = await this.Read("subject", "id = '" + id + "'")
+
+    if(res.rowCount != 0)
+    {
+      console.log(id + " already in use")
+    }
+
+
+    try {
+      const result = Database.exec(
+        'INSERT INTO "subject" (id, name, html_markdown_code) VALUES ($1, $2, $3) RETURNING *',
+        [id, name, html_markdown_code]
+      );
+      return result
+
+    } catch (error) {
+      console.error('Error creating subject:', error);
+      return null;
+    }
+  }
+
   async Read(db, constraint) {
 
     console.log("DBHelper.Read")
@@ -102,6 +128,32 @@ class DBHelper {
     }
   }
 
+  async GetSubjectsFromUser(user_id)
+  {
+    try {
+      
+      console.log("DBHelper.GetSubjectsFromUser")
+      let command = "SELECT subject.id, subject.name FROM subject_speakers JOIN subject ON subject_speakers.subject_id = subject.id WHERE subject_speakers.user_id = " + user_id + ";"
+      const res = await Database.exec(command) 
+      return res.rows
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+
+  async GetNameFromSubjectID(SubjectID)
+  {
+    try {
+      
+      console.log("DBHelper.GetNameFromSubjectID")
+      let command = 'SELECT "user".id, "user".lastname, "user".surname FROM subject_speakers JOIN "user" ON subject_speakers.user_id = "user".id WHERE subject_speakers.subject_id = ' + SubjectID + ";"
+      const res = await Database.exec(command) 
+      return res.rows
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
 }
 

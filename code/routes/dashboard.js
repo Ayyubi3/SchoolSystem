@@ -2,6 +2,8 @@
 const path = require("path")
 const { PATH_PUBLIC } = require("../index")
 
+const { DatabaseHelper } = require("../Database.js")
+
 
 
 
@@ -19,7 +21,7 @@ dashboardrouter
 
 
 
-    .get('/dashboard', (req, res) => {
+    .get('/dashboard', async (req, res) => {
 
         if (!req.isAuthenticated()) {
             console.log("Not authenticated, redirect to \"/\"")
@@ -28,10 +30,11 @@ dashboardrouter
 
         } else {
 
-            let Subjects = JSON.parse(require("fs").readFileSync("Subjects.json"))
+            console.log("s")
 
-            const UserSubjects = req.user["subjects"]
-            Subjects = Subjects.filter(subject => UserSubjects.includes(subject.id));
+            console.log(req.user)
+            let Subjects = await DatabaseHelper.GetSubjectsFromUser(req.user.id)
+            console.log(Subjects)
             res.render(path.join(PATH_PUBLIC, "Dashboard", "index.ejs"), {Subjects})
 
         }

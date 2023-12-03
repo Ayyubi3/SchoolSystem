@@ -62,7 +62,6 @@ app.get('/', async (req, res) =>  {
 const { router } = require("./routes/login")
 
 app.use(router)
-/*
 const { dashboardrouter } = require("./routes/dashboard")
 
 app.use(dashboardrouter)
@@ -71,6 +70,7 @@ app.use(dashboardrouter)
 const { courserouter } = require("./routes/courses")
 
 app.use(courserouter)
+
 
 const { filesrouter } = require("./routes/files")
 
@@ -85,7 +85,6 @@ const { createsubjectrouter } = require("./routes/createsubject")
 app.use(createsubjectrouter)
 
 
-*/
 
 app.listen(3000)
 

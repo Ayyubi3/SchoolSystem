@@ -28,13 +28,20 @@
     }
   </style>
 </head>
-
 <body>
   <nav>
     <h1>
-      <%= obj.name %>
+      <%= subject.name %>
     </h1>
-    <div class="speakers">List of Speakers: <%= obj.speaker.join(', ') %></div>
+    <div class="speakers">List of Speakers:
+
+      <% speaker.forEach((element ) => { %>
+        <%= element.id %>
+      <% }); %>
+
+
+
+    </div>
     <button id="postButton">JOIN</button>
       <script>
 
@@ -71,7 +78,7 @@
       </script>
 
   </nav>
-  <%- obj.elements %>
+  <%- subject.html_markdown_code %>
 
 </body>
 

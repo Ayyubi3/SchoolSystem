@@ -1,7 +1,7 @@
 
 const path = require("path")
 const { PATH_PUBLIC } = require("../index")
-const {DB} = require("../DB")
+const {DatabaseHelper} = require("../Database")
 
 
 
@@ -21,10 +21,10 @@ var express = require('express'),
 
 
 
-    .get('/subjects', (req, res) => {
+    .get('/subjects', async (req, res) => {
 
 
-        const Subjects = DB.read(DB.Databases.SUBJECTS)
+        const Subjects = await DatabaseHelper.Read("subject")
 
         res.render(path.join(PATH_PUBLIC, "SubjectList", "index.ejs"), {Subjects, loggedIn: req.isAuthenticated()})
 

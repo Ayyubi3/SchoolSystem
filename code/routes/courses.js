@@ -1,8 +1,9 @@
-const {DB} = require("../DB")
+
 const path = require("path")
 const { PATH_PUBLIC } = require("../index")
 
 
+const { DatabaseHelper } = require("../Database.js")
 
 
 
@@ -21,12 +22,16 @@ courserouter
 
 
 
-    .get('/courses/:id', (req, res) => {
+    .get('/courses/:id', async (req, res) => {
 
-        const subjects = DB.read(DB.Databases.SUBJECTS)
-        const obj = subjects.find(obj => obj.id == req.params.id)
+        const subject = await DatabaseHelper.Read("subject", "id = " + req.params.id)
+        const speaker = await DatabaseHelper.GetNameFromSubjectID(req.params.id)
 
-        res.render(path.join(PATH_PUBLIC, "Course", "index.ejs"), {obj, Useremail: req.user["email"]})
+        console.log(subject)
+        console.log(speaker)
+
+        //TODO: Errorcheck req.user["email"]
+        res.render(path.join(PATH_PUBLIC, "Course", "index.ejs"), {subject: subject[0], speaker: speaker, Useremail: req.user["email"]})
 
 
 

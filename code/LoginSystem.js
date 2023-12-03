@@ -13,8 +13,9 @@ class UserSystem {
     static initialize(passport) {
         passport.use(new LocalStrategy({ usernameField: 'email' }, this.authenticateUser))
         passport.serializeUser((user, done) => done(null, user.id))
-        passport.deserializeUser((id, done) => {
-            return done(null, this.getUserById(id))
+        passport.deserializeUser(async (id, done) => {
+            const user = await this.getUserById(id)
+            return done(null, user)
         })
     }
 

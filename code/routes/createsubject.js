@@ -1,4 +1,4 @@
-const {DB} = require("../DB")
+const {DatabaseHelper} = require("../Database")
 const path = require("path")
 const { PATH_PUBLIC } = require("../index")
 
@@ -40,7 +40,7 @@ var express = require('express'),
 
     })
 
-    .post('/createsubject', (req, res) => {
+    .post('/createsubject', async (req, res) => {
 
         if (!req.isAuthenticated()) {
             console.log("Not authenticated, redirect to \"/\"")
@@ -50,19 +50,24 @@ var express = require('express'),
     
         } 
 
+        //TODO: REWORK
 
-        req.body.speaker = req.body.speaker.split(",")
         try {
             req.body.creator = req.user["email"]
             
         } catch (error) {
-            
+            console.log(error)
         } 
         
-        req.body.id = getRandomNumberGreaterThan1000()
+        //TODO: ID besser assignen
+        const randomID = getRandomNumberGreaterThan1000()
 
 
-        DB.add(DB.Databases.SUBJECTS, req.body, (obj, content) => { return content.some(item => item.id === obj.id); })
+//        TODO: Speaker und so
+        const speaker = req.body.speaker.split(",")
+
+        DatabaseHelper.SubjectCreate(randomID, req.body.name, req.body.html_markdown_code)
+
 
 
         res.redirect("/")
