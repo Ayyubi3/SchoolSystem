@@ -1,8 +1,11 @@
 const LocalStrategy = require('passport-local').Strategy
 const bcrypt = require('bcrypt')
-const {DB} = require("./DB")
 
 const passport = require('passport')
+
+
+const { DatabaseHelper } = require("./Database.js")
+
 
 class UserSystem {
 
@@ -18,14 +21,14 @@ class UserSystem {
 
     static authenticateUser = async (email, password, done) => {
         console.log("authenticate user " + email + " / " + password)
-    
-        const user = this.getUserByEmail(email)
-    
+
+        const user = await this.getUserByEmail(email)
+
         if (user == null) {
             console.log("No user with that email")
             return done(null, false, { message: 'No user with that email' })
         }
-    
+
         try {
             if (await bcrypt.compare(password, user.password)) {
                 return done(null, user)
@@ -41,64 +44,42 @@ class UserSystem {
 
 
 
-    static async addUser(email, password, name, id) {
-
-        const Users = DB.read(DB.Databases.USERS);
-    
-        if(Users.some((user) => {return user.email === email})) {
-            console.log("User already exists")
-            return false
-    
-        }
-    
+    static async addUser(firstname, lastname, email, password) {
         try {
-            const hashedPassword = await bcrypt.hash(password, 10)
-    
-    
-    
-    
-            Users.push({
-                id: id,
-                name: name,
-                email: email,
-                password: hashedPassword,
-                subjects: []
-            })
-    
-            DB.writeAll(DB.Databases.USERS, Users, (obj, content) => { 
-                content.find(element => {element.email == obj.email})
 
-             })
-            console.log("Register successful")
+            password = await bcrypt.hash(password, 10)
+
+            await DatabaseHelper.UserCreate(firstname, lastname, email, password)
+
+
             return true
-        } catch (e) {
-            console.log("Register error")
-            console.log(e)
+
+        } catch (error) {
+            console.log(error)
+
             return false
-    
         }
-    
-    
-    
+
     }
 
-    
-    
-    
-    
-    
-    static getUserByEmail(email) {
-    
-        const Users = DB.read(DB.Databases.USERS);
-        return Users.find(user => user.email === email)
+
+
+
+
+    static async getUserByEmail(email) {
+
+        const res = await DatabaseHelper.Read("user", "email = " + "'" + email + "'")
+        return res[0]
+        
     }
-    
-    static getUserById(id) {
-        const Users = DB.read(DB.Databases.USERS);
-        return Users.find(user => user.id === id)
+
+    static async getUserById(id) {
+        const res = await DatabaseHelper.Read("user", "id = " + "'" + id + "'")
+        return res[0]
+        
     }
-    
-    
+
+
 }
 
 

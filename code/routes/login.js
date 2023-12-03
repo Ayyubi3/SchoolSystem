@@ -42,9 +42,10 @@ router
 
 
     const user = {
-      name: req.body.name,
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
       email: req.body.email,
-      pw: req.body.password
+      password: req.body.password
     }
 
 
@@ -63,8 +64,8 @@ router
       
     }
     
-    
-    if (!UserSystem.addUser(user.email, user.pw, user.name, Date.now().toString())) 
+    console.log(user)
+    if (!UserSystem.addUser(user.firstname, user.lastname, user.email, user.password)) 
     {
       req.flash("error", "Adding user failed"); 
       return res.redirect("/register");

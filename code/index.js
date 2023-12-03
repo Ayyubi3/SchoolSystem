@@ -7,6 +7,9 @@ const bodyParser = require("body-parser")
 const path = require("path")
 var flash = require('connect-flash');
 
+const { DatabaseHelper } = require("./Database.js")
+
+
 
 const PATH_PUBLIC = path.join(__dirname, "..", "public")
 
@@ -43,20 +46,23 @@ app.use(methodOverride('_method'))
 
 
 
-app.get('/', (req, res) => {
+app.get('/', async (req, res) =>  {
 
 
   let name = ""
 
-  try { name = req.user["name"]; } catch (error) {}
+  console.log("req.user")
+
+  try { const user = await req.user;  name = JSON.parse(JSON.stringify(user))["surname"] } catch (error) { console.log(error) }
 
 
   res.render(path.join(PATH_PUBLIC, "HomePage", "index.ejs"), { loggedIn: req.isAuthenticated(), user: name, alertMessage: req.flash("info")[0]})
 })
+
 const { router } = require("./routes/login")
 
 app.use(router)
-
+/*
 const { dashboardrouter } = require("./routes/dashboard")
 
 app.use(dashboardrouter)
@@ -79,7 +85,7 @@ const { createsubjectrouter } = require("./routes/createsubject")
 app.use(createsubjectrouter)
 
 
-
+*/
 
 app.listen(3000)
 
