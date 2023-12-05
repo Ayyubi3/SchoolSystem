@@ -45,6 +45,9 @@ class UserSystem {
 
 
 
+    /**
+     * return = true -> Benutzer wurde erfolgreich hinzugefügt
+     */
     static async addUser(firstname, lastname, email, password) {
         try {
 
@@ -82,24 +85,6 @@ class UserSystem {
 
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -7,25 +7,15 @@ const { PATH_PUBLIC } = require("../index")
 
 
 
-
-
-
-
 var express = require('express'),
-  router = express.Router();
+loginrouter = express.Router();
 
-
-router
-
-
+  loginrouter
 
 
   .get('/login', (req, res) => {
     res.render(path.join(PATH_PUBLIC, "Login", "index.ejs"), {})
   })
-
-
-
 
 
   .post('/login', passport.authenticate('local', {
@@ -41,31 +31,10 @@ router
   .post('/register', async (req, res) => {
 
 
-    const user = {
-      firstname: req.body.firstname,
-      lastname: req.body.lastname,
-      email: req.body.email,
-      password: req.body.password
-    }
 
+    console.log("Registering " + JSON.stringify(req.body))
 
-    //Check if name is valid
-
-    if (!(/^[A-Za-zÄäÖöÜüß ]+$/).test(user.name)) {
-
-      req.flash("error", "Name is not a valid name!")
-      return res.redirect("/register")
-    }
-    
-    if (!(/^[^\s@]+@[^\s@]+\.[^\s@]+$/).test(user.email)) {
-      
-      req.flash("error", "Email is not a valid Email!")
-      return res.redirect("/register")
-      
-    }
-    
-    console.log(user)
-    if (!UserSystem.addUser(user.firstname, user.lastname, user.email, user.password)) 
+    if (!UserSystem.addUser(req.body.firstname, req.body.lastname, req.body.email, req.body.password)) 
     {
       req.flash("error", "Adding user failed"); 
       return res.redirect("/register");
@@ -87,4 +56,4 @@ router
 
 
 
-module.exports = { router };
+module.exports = { loginrouter };

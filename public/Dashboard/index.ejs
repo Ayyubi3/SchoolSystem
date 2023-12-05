@@ -57,6 +57,7 @@
     <h2>My Subjects</h2>
     <button onclick="window.location.href = `/createsubject` ">Create Subject</button>
     <ul>
+      <% if(Subjects) { %>
       <% Subjects.forEach((Subject => { %>
         <li>
           <a href="/courses/<%=Subject.id%>">
@@ -64,7 +65,7 @@
           </a>
         </li>
         
-        <% })) %>
+        <% }))} %>
     </ul>
   </section>
 

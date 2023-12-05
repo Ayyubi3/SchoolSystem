@@ -31,13 +31,6 @@ var express = require('express'),
         } 
         res.render(path.join(PATH_PUBLIC, "CreateSubject", "index.ejs"), {})
 
-
-
-
-        
-
-
-
     })
 
     .post('/createsubject', async (req, res) => {
@@ -50,43 +43,20 @@ var express = require('express'),
     
         } 
 
-        //TODO: REWORK
 
-        try {
-            req.body.creator = req.user["email"]
-            
-        } catch (error) {
-            console.log(error)
-        } 
-        
-        //TODO: ID besser assignen
-        const randomID = getRandomNumberGreaterThan1000()
+        const speakerarray = req.body.speaker.split(',')
+        let speaker = speakerarray.map(str => parseInt(str, 10))
 
+        const creator = await req.user["id"]
 
-//        TODO: Speaker und so
-        const speaker = req.body.speaker.split(",")
-
-        DatabaseHelper.SubjectCreate(randomID, req.body.name, req.body.html_markdown_code)
+        DatabaseHelper.SubjectCreate(req.body.name, req.body.html_markdown_code, speaker, creator)
 
 
 
         res.redirect("/")
-
-
-        
-
-
-
     })
 
 
 
 
 module.exports = { createsubjectrouter };
-
-
-function getRandomNumberGreaterThan1000() {
-    const min = 1001;
-    const max = 2000;
-    return Math.floor(Math.random() * (max - min + 1) + min);
-  }

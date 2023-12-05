@@ -14,10 +14,10 @@ const { DatabaseHelper } = require("../Database.js")
 
 
 var express = require('express'),
-    courserouter = express.Router();
+    coursesrouter = express.Router();
 
 
-courserouter
+coursesrouter
 
 
 
@@ -25,12 +25,11 @@ courserouter
     .get('/courses/:id', async (req, res) => {
 
         const subject = await DatabaseHelper.Read("subject", "id = " + req.params.id)
-        const speaker = await DatabaseHelper.GetNameFromSubjectID(req.params.id)
+        const speaker = await DatabaseHelper.GetSpeakerNameFromSubjectID(req.params.id)
 
         console.log(subject)
         console.log(speaker)
-
-        //TODO: Errorcheck req.user["email"]
+        
         res.render(path.join(PATH_PUBLIC, "Course", "index.ejs"), {subject: subject[0], speaker: speaker, Useremail: req.user["email"]})
 
 
@@ -68,5 +67,5 @@ courserouter
 
 
 
-module.exports = { courserouter };
+module.exports = { coursesrouter };
 

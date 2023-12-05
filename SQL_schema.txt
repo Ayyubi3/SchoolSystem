@@ -1,0 +1,28 @@
+CREATE TABLE "user" (
+    id SERIAL PRIMARY KEY CHECK (id BETWEEN 100000 AND 999999),
+    firstname VARCHAR(255) NOT NULL,
+    lastname VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL
+);
+
+
+CREATE TABLE subject (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    html_markdown_code TEXT NOT NULL
+);
+
+
+CREATE TABLE subject_creator (
+    subject_id SERIAL REFERENCES subject(id),
+    creator_id SERIAL REFERENCES "user"(id),
+    PRIMARY KEY (subject_id, creator_id)
+);
+
+CREATE TABLE subject_speaker (
+    subject_id SERIAL REFERENCES subject(id),
+    speaker_id SERIAL REFERENCES "user"(id),
+    PRIMARY KEY (subject_id, speaker_id)
+);
+//somethings missing
