@@ -6,8 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hochschule Eden</title>
     <style>
-
-        
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -42,6 +40,7 @@
             text-decoration: none;
             margin: 0 15px;
         }
+
         nav form button {
             font-size: medium;
             background-color: none;
@@ -72,38 +71,39 @@
         <h1>Hochschule Eden</h1>
     </header>
 
-    <% if (alertMessage && alertMessage.length > 0) { console.log(alertMessage)  %>
+    <% if (alertMessage && alertMessage.length> 0) { console.log(alertMessage) %>
 
         <script>
             alert("<%= alertMessage %>")
         </script>
-      <% } %>
+        <% } %>
 
 
-    <nav>
+            <nav>
 
-            <% if (loggedIn) { %>
+                <% if (loggedIn) { %>
 
-                <form action="/logout?_method=DELETE" method="POST">
-                    <button type="submit">Log Out</button>
-                </form>
+                    <form action="/logout?_method=DELETE" method="POST">
+                        <button type="submit">Log Out</button>
+                    </form>
 
-            <% } else { %>
-                <a href="/login">Login</a>
-                <a href="/register">Register</a>
-            <% } %>
-            <a href="/dashboard">Dashboard</a>
-            <a href="/subjects">Subjects</a>
+                    <% } else { %>
+                        <a href="/login">Login</a>
+                        <a href="/register">Register</a>
+                        <% } %>
+                            <a href="/dashboard">Dashboard</a>
+                            <a href="/subjects">Subjects</a>
 
-    </nav>
+            </nav>
 
-    <section>
-        <h2>Herzlich willkommen an unserer Universität, <%= user %>!</h2>
-        <p>Dies ist eine kurze Einführung in unsere Universität. Sie können bei Bedarf weitere Inhalte und Abschnitte hinzufügen.</p>
-    </section>
-    <footer>
-        <p>&copy; 2023 Hochschule Eden. Alle Rechte vorbehalten.</p>
-    </footer>
+            <section>
+                <h2>Herzlich willkommen an unserer Universität, <%= user %>!</h2>
+                <p>Dies ist eine kurze Einführung in unsere Universität. Sie können bei Bedarf weitere Inhalte und
+                    Abschnitte hinzufügen.</p>
+            </section>
+            <footer>
+                <p>&copy; 2023 Hochschule Eden. Alle Rechte vorbehalten.</p>
+            </footer>
 
 </body>
 
