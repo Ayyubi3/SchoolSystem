@@ -3,9 +3,8 @@ CREATE TABLE "user" (
     firstname VARCHAR(255) NOT NULL,
     lastname VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL
+    email VARCHAR(255) NOT NULL UNIQUE
 );
-
 
 CREATE TABLE subject (
     id SERIAL PRIMARY KEY,
@@ -25,4 +24,4 @@ CREATE TABLE subject_speaker (
     speaker_id SERIAL REFERENCES "user"(id),
     PRIMARY KEY (subject_id, speaker_id)
 );
-//somethings missing
+
