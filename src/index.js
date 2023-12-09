@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // Database Configuration
-const { Database } = require("./libs/DatabaseUtils")
+const { Database, DatabaseUtils } = require("./libs/DatabaseUtils")
 
 // Express Session Configuration
 const sessionConfig = {
@@ -37,16 +37,23 @@ const sessionConfig = {
 
 app.use(session(sessionConfig))
 
-
-
 // Passport Configuration
-const passport = require("./libs/PassportUtils")
+const {passport} = require("./libs/PassportUtils")
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 app.get('/', async (req, res) => {
 
-    console.log(req.session.passport.user.email)
-    res.render(require("path").join("..", "public", "index", "index.ejs"), { loggedIn: false, user: req.session.passport.user.email, alertMessage: null })
+    let name = ""
+    if(req.user)
+    {
+        console.log("test")
+        const user = await DatabaseUtils.getUserByID(await req.user["id"])
+        name = ", " + user.firstname + " " + user.lastname
+    }
+    res.render(require("path").join("..", "public", "index", "index.ejs"), { user: name, alertMessage: null })
 })
 
 

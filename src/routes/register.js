@@ -20,9 +20,7 @@ registerrouter
 
     .post('/register', passport.authenticate("local-signup", {  }),
         (req, res, next) => {
-            res.json({
-                user: req.user,
-            });
+            res.redirect("/login")
         }
     )
 

@@ -19,7 +19,7 @@ class Database {
 
     static async exec(inpt, args) {
 
-        console.log("Database.exec = ")
+        console.log("Database.exec = " + inpt)
 
         try {
             let res = await this.pool.query(inpt, args)
@@ -56,9 +56,30 @@ class DatabaseUtils {
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(user.password, salt);
 
+        
+
+        let out = false
+        let output;
+        let number;
+        do {
+            number = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
+            console.log(number)
+
+            output = await Database.exec('SELECT * FROM "user" WHERE id = ' + number)
+            console.log(output.rowCount)
+            if(output.rowCount == 0)
+            {
+                out = true
+            }
+        } while (!out);
+
+
+        
+
+
         const data = await Database.exec(
             `INSERT INTO "user"(id, firstname, lastname, email, password) VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-            [222222, user.firstname, user.lastname, user.email, hash]
+            [number, user.firstname, user.lastname, user.email, hash]
         );
 
         if (data.rowCount == 0) return false;

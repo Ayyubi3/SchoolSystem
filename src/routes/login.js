@@ -20,9 +20,21 @@ loginrouter
 
     .post('/login', passport.authenticate("local-login", {}),
         (req, res, next) => {
-            res.json({ user: req.user });
+            res.redirect("/")
         }
     )
+
+
+    .post('/logout', (req, res) => {
+
+        req.logout((err) => {
+            console.log(err ? err : "Log out")
+        })
+
+        res.redirect("/")
+
+    })
+
 
 
 
