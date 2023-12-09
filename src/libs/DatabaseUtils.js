@@ -52,7 +52,7 @@ class DatabaseUtils {
 
 
     static async createUser(user) {
-        console.log(user)
+        console.log("Create user: ", user)
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(user.password, salt);
 
@@ -85,6 +85,41 @@ class DatabaseUtils {
         if (data.rowCount == 0) return false;
         return data.rows[0];
     };
+
+
+
+    static async createSubject(subject)
+    {
+        // FIXME: Test if creator id is included
+
+        let out = false
+        let output;
+        let number;
+        do {
+            number = Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
+            console.log(number)
+
+            output = await Database.exec('SELECT * FROM "subject" WHERE id = ' + number)
+            console.log(output.rowCount)
+            if(output.rowCount == 0)
+            {
+                out = true
+            }
+        } while (!out);
+
+
+        
+
+
+        const data = await Database.exec(
+            `INSERT INTO "subject"(id, name, html_markdown_code, creator_id) VALUES ($1, $2, $3, $4) RETURNING *`,
+            [number, subject.name, subject.html_markdown_code, subject.creator_id]
+        );
+
+        if (data.rowCount == 0) return false;
+        return data.rows[0];
+
+    }
 
 
     static async matchPassword(password, hashPassword) {

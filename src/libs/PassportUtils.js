@@ -59,9 +59,11 @@ passport.use(
 passport.serializeUser((user, done) => {
   console.log(user)
   done(null, user);
+  console.log("L")
 });
 
 passport.deserializeUser(async (user, done) => {
+
   try {
       let out = await DatabaseUtils.getUserByID(user.id);
       done(null, out);

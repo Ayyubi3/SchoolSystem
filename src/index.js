@@ -44,12 +44,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
+
 app.get('/', async (req, res) => {
 
     let name = ""
     if(req.user)
     {
-        console.log("test")
         const user = await DatabaseUtils.getUserByID(await req.user["id"])
         name = ", " + user.firstname + " " + user.lastname
     }
@@ -62,6 +62,15 @@ const { registerrouter } = require("./routes/register")
 app.use(registerrouter)
 const { loginrouter } = require("./routes/login")
 app.use(loginrouter)
+const { dashboardrouter } = require("./routes/dashboard")
+app.use(dashboardrouter)
+
+
+const { createsubjectrouter } = require("./routes/createsubject")
+app.use(createsubjectrouter)
+
+
+
 
 
 
