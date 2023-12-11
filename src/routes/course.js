@@ -36,7 +36,18 @@ var express = require('express'),
     })
 
 
-    .post('/course', (req, res) => {
+    .post('/course/:id', async(req, res) => {
+
+        if (!req.isAuthenticated()) {
+            // FIXME: Send a message to index. maybe flash
+            res.redirect("/login");
+        } else {
+
+
+            DatabaseUtils.userJoinCourse(req.params.id, await req.user["id"])
+
+        }
+
 
 
     })

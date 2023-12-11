@@ -154,6 +154,23 @@ class DatabaseUtils {
     }
 
 
+    static async userJoinCourse(course_id, user_id)
+    {
+        console.log(course_id, user_id)
+
+
+        const data = await Database.exec(
+            `INSERT INTO user_subject (user_id, subject_id) VALUES ($1, $2);`,
+            [user_id, course_id]
+        );
+
+        console.log(data)
+
+        if (data.rowCount == 0) return false;
+        return data.rows[0];
+    }
+
+
 
 
 }
