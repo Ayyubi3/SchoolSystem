@@ -88,7 +88,7 @@ class DatabaseUtils {
 
 
 
-    static async createSubject(subject)
+    static async createCourse(course)
     {
         // FIXME: Test if creator id is included
 
@@ -113,7 +113,7 @@ class DatabaseUtils {
 
         const data = await Database.exec(
             `INSERT INTO "subject"(id, name, html_markdown_code, creator_id) VALUES ($1, $2, $3, $4) RETURNING *`,
-            [number, subject.name, subject.html_markdown_code, subject.creator_id]
+            [number, course.name, course.html_markdown_code, course.creator_id]
         );
 
         if (data.rowCount == 0) return false;
@@ -136,6 +136,22 @@ class DatabaseUtils {
         if (data.rowCount == 0) return false;
         return data.rows[0];
     };
+
+
+    static async getCourseByID(id)
+    {
+
+
+
+        const data = await Database.exec(
+            `SELECT * FROM subject WHERE id = ` + id
+        );
+
+        console.log(data.rows[0])
+
+        if (data.rowCount == 0) return false;
+        return data.rows[0];
+    }
 
 
 

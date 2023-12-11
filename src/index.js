@@ -38,7 +38,7 @@ const sessionConfig = {
 app.use(session(sessionConfig))
 
 // Passport Configuration
-const {passport} = require("./libs/PassportUtils")
+const { passport } = require("./libs/PassportUtils")
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -48,8 +48,7 @@ app.use(passport.session());
 app.get('/', async (req, res) => {
 
     let name = ""
-    if(req.user)
-    {
+    if (req.user) {
         const user = await DatabaseUtils.getUserByID(await req.user["id"])
         name = ", " + user.firstname + " " + user.lastname
     }
@@ -64,10 +63,10 @@ const { loginrouter } = require("./routes/login")
 app.use(loginrouter)
 const { dashboardrouter } = require("./routes/dashboard")
 app.use(dashboardrouter)
-
-
-const { createsubjectrouter } = require("./routes/createsubject")
-app.use(createsubjectrouter)
+const { createcourserouter } = require("./routes/createscourse")
+app.use(createcourserouter)
+const { courserouter } = require("./routes/course")
+app.use(courserouter)
 
 
 

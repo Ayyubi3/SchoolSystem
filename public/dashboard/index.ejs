@@ -45,23 +45,23 @@
       color: black;
     }
   </style>
-  <title>School Subjects Dashboard</title>
+  <title>School Course Dashboard</title>
 </head>
 <body>
 
   <header>
-    <h1>School Subjects Dashboard</h1>
+    <h1>School Course Dashboard</h1>
   </header>
 
   <section>
-    <h2>My Subjects</h2>
-    <button onclick="window.location.href = `/createsubject` ">Create Subject</button>
+    <h2>My Courses</h2>
+    <button onclick="window.location.href = `/createcourse` ">Create Course</button>
     <ul>
-      <% if(Subjects) { %>
-      <% Subjects.forEach((Subject => { %>
+      <% if(Courses) { %>
+      <% Courses.forEach((Course => { %>
         <li>
           <a href="/courses/<%=Subject.id%>">
-            <span><%= Subject.name %></span>
+            <span><%= Course.name %></span>
           </a>
         </li>
         

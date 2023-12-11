@@ -6,18 +6,18 @@ const {DatabaseUtils} = require("../libs/DatabaseUtils")
 
 
 var express = require('express'),
-    createsubjectrouter = express.Router();
+    createcourserouter = express.Router();
 
-createsubjectrouter
+    createcourserouter
 
 
-    .get('/createsubject', (req, res) => {
+    .get('/createcourse', (req, res) => {
         if (!req.isAuthenticated()) {
             // FIXME: Send a message to index. maybe flash
             res.redirect("/login");
         } else {
 
-            const filepath = path.join(__dirname, "..", "..", "public", "createsubject", "index.ejs")
+            const filepath = path.join(__dirname, "..", "..", "public", "createcourse", "index.ejs")
             res.render(filepath, {})
         }
 
@@ -26,7 +26,7 @@ createsubjectrouter
     })
 
 
-    .post('/createsubject', (req, res) => {
+    .post('/createcourse', (req, res) => {
         if (!req.isAuthenticated()) {
             // FIXME dont know if this works
             console.log("Need to be authenticated to create subject")
@@ -37,7 +37,7 @@ createsubjectrouter
             req.body.creator_id = req.user["id"]
             console.log(req.body)
 
-            DatabaseUtils.createSubject(req.body)
+            DatabaseUtils.createCourse(req.body)
         }
 
     })
@@ -46,4 +46,4 @@ createsubjectrouter
 
 
 
-module.exports = { createsubjectrouter };
+module.exports = { createcourserouter };

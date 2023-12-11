@@ -18,7 +18,7 @@ var express = require('express'),
         } else {
             
         const filepath = path.join(__dirname, "..", "..", "public", "dashboard", "index.ejs")
-        res.render(filepath, {Subjects: null})
+        res.render(filepath, {Courses: null})
         }
     
 
