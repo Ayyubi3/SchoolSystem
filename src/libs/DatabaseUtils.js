@@ -58,6 +58,8 @@ class DatabaseUtils {
 
         
 
+        // Was hab ich hier gemacht?????
+        // FIXME SELECT id FROM "user" benutzen
         let out = false
         let output;
         let number;
@@ -91,6 +93,8 @@ class DatabaseUtils {
     static async createCourse(course)
     {
         // FIXME: Test if creator id is included
+        // FIXME SELECT id FROM "subject" benutzen
+
 
         let out = false
         let output;
