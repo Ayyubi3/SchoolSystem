@@ -174,6 +174,36 @@ class DatabaseUtils {
         return data.rows[0];
     }
 
+    static async getUserCourses(userID)
+    {
+
+
+        const data = await Database.exec(
+            `SELECT subject_id FROM user_subject WHERE user_id = ` + userID
+        );
+
+        console.log(data.rows)
+        if (data.rowCount == 0) return false;
+
+
+        const results = [];
+
+        for (const subjectId of data.rows) {
+          try {
+            const query = `SELECT * FROM subject WHERE id = ` + subjectId.subject_id;
+      
+            const result = await Database.exec(query);
+      
+            results.push(result.rows[0]);
+          } catch (error) {
+            console.error(`Error fetching data for subject ID ${subjectId}:`, error);
+          }
+        }
+      
+        
+        return results;
+
+    }
 
 
 
