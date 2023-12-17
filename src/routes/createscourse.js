@@ -37,7 +37,7 @@ var express = require('express'),
             req.body.creator_id = req.user["id"]
             console.log(req.body)
 
-            DatabaseUtils.createCourse(req.body)
+            DatabaseUtils.createCourse(req.body.name, req.body.html_markdown_code, req.body.creator_id)
         }
 
     })

@@ -6,15 +6,26 @@ const bcrypt = require('bcrypt')
 class Database {
 
 
-    static pool = new Pool({
-        user: process.env.DBUSER,
-        host: process.env.DBHOST,
-        database: process.env.DBDATABASE,
-        password: process.env.DBPASSWORD,
-        port: process.env.DBPORT,
-        max: 10,
-        idleTimeoutMillis: 30000
-    })
+    static pool = null
+
+    static async init() {
+
+        try {
+            
+            this.pool = new Pool({
+                user: process.env.DBUSER,
+                host: process.env.DBHOST,
+                database: process.env.DBDATABASE,
+                password: process.env.DBPASSWORD,
+                port: process.env.DBPORT,
+                max: 10,
+                idleTimeoutMillis: 30000
+            })
+        } catch (error) {
+         console.log(error)   
+        }
+    }
+
 
 
     static async exec(inpt, args) {
@@ -51,77 +62,83 @@ class DatabaseUtils {
     };
 
 
-    static async createUser(user) {
-        console.log("Create user: ", user)
+    static async createUser(firstname, lastname, email, password, id) {
+        console.log("Create user: ", firstname, lastname, email, password, id)
         const salt = await bcrypt.genSalt(10);
-        const hash = await bcrypt.hash(user.password, salt);
-
-        
-
-        // Was hab ich hier gemacht?????
-        // FIXME SELECT id FROM "user" benutzen
-        let out = false
-        let output;
-        let number;
-        do {
-            number = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
-            console.log(number)
-
-            output = await Database.exec('SELECT * FROM "user" WHERE id = ' + number)
-            console.log(output.rowCount)
-            if(output.rowCount == 0)
-            {
-                out = true
-            }
-        } while (!out);
+        const hash = await bcrypt.hash(password, salt);
 
 
-        
+        const number = id ? id : await generateRandomID()
 
 
         const data = await Database.exec(
             `INSERT INTO "user"(id, firstname, lastname, email, password) VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-            [number, user.firstname, user.lastname, user.email, hash]
+            [number, firstname, lastname, email, hash]
         );
 
         if (data.rowCount == 0) return false;
         return data.rows[0];
+
+
+
+
+        async function generateRandomID() {
+            let out = false
+            let output;
+            let number;
+            do {
+                number = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
+                console.log("Trying " + number)
+
+                output = await Database.exec('SELECT COUNT(*) FROM "user" WHERE id = ' + number)
+                const count = parseInt(output.rows[0].count)
+                console.log(number)
+                if (count == 0) { out = true }
+            } while (!out);
+
+            return number
+        }
     };
 
 
 
-    static async createCourse(course)
-    {
+    static async createCourse(name, html_markdown_code, creator_id, id) {
         // FIXME: Test if creator id is included
         // FIXME SELECT id FROM "subject" benutzen
 
 
-        let out = false
-        let output;
-        let number;
-        do {
-            number = Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
-            console.log(number)
-
-            output = await Database.exec('SELECT * FROM "subject" WHERE id = ' + number)
-            console.log(output.rowCount)
-            if(output.rowCount == 0)
-            {
-                out = true
-            }
-        } while (!out);
 
 
-        
+        const number = id ? id : await generateRandomID()
+
 
 
         const data = await Database.exec(
             `INSERT INTO "subject"(id, name, html_markdown_code, creator_id) VALUES ($1, $2, $3, $4) RETURNING *`,
-            [number, course.name, course.html_markdown_code, course.creator_id]
+            [number, name, html_markdown_code, creator_id]
         );
 
         if (data.rowCount == 0) return false;
         return data.rows[0];
+
+
+
+        async function generateRandomID() {
+            let out = false
+            let output;
+            let number;
+            do {
+                number = Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
+                console.log("Trying " + number)
+
+                output = await Database.exec('SELECT COUNT(*) FROM "subject" WHERE id = ' + number)
+                const count = parseInt(output.rows[0].count)
+                console.log(number)
+                if (count == 0) { out = true }
+            } while (!out);
+
+            return number
+        }
 
     }
 
@@ -142,8 +159,7 @@ class DatabaseUtils {
     };
 
 
-    static async getCourseByID(id)
-    {
+    static async getCourseByID(id) {
 
 
 
@@ -158,8 +174,7 @@ class DatabaseUtils {
     }
 
 
-    static async userJoinCourse(course_id, user_id)
-    {
+    static async userJoinCourse(course_id, user_id) {
         console.log(course_id, user_id)
 
 
@@ -174,8 +189,7 @@ class DatabaseUtils {
         return data.rows[0];
     }
 
-    static async getUserCourses(userID)
-    {
+    static async getUserCourses(userID) {
 
 
         const data = await Database.exec(
@@ -189,18 +203,18 @@ class DatabaseUtils {
         const results = [];
 
         for (const subjectId of data.rows) {
-          try {
-            const query = `SELECT * FROM subject WHERE id = ` + subjectId.subject_id;
-      
-            const result = await Database.exec(query);
-      
-            results.push(result.rows[0]);
-          } catch (error) {
-            console.error(`Error fetching data for subject ID ${subjectId}:`, error);
-          }
+            try {
+                const query = `SELECT * FROM subject WHERE id = ` + subjectId.subject_id;
+
+                const result = await Database.exec(query);
+
+                results.push(result.rows[0]);
+            } catch (error) {
+                console.error(`Error fetching data for subject ID ${subjectId}:`, error);
+            }
         }
-      
-        
+
+
         return results;
 
     }
