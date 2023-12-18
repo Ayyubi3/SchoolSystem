@@ -4,15 +4,13 @@
   "description": "Project is a platform for students and teachers to teach and communicate",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon -V --trace-warnings ./src/index.js",
-    "test": "jest --watchAll --verbose"
+    "dev": "nodemon -V --trace-warnings ./src/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "dotenv": "^16.3.1",
-    "jest": "^29.7.0",
     "nodemon": "^3.0.2"
   },
   "nodemonConfig": {

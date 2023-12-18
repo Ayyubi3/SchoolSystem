@@ -49,7 +49,7 @@ app.use(passport.session());
 app.get('/', async (req, res) => {
 
     let name = ""
-    if (false) {
+    if (req.user) {
         const user = await DatabaseUtils.getUserByID(await req.user["id"])
         name = ", " + user.firstname + " " + user.lastname
     }
@@ -75,7 +75,40 @@ app.use(courserouter)
 
 
 
+
 app.listen(port, () => {
     console.log(`Express Server gestartet -> PORT: ${port}`)
 })
 
+
+
+
+
+async function test()
+{
+    console.log("TESTS")
+    await Database.exec("BEGIN")
+
+    await DatabaseUtils.createUser("test", "test", "test2", "test")
+    await DatabaseUtils.createUser("test", "test", "test", "test", 123321)
+
+    const user1 = await DatabaseUtils.getUserByID(123321)
+    const user2exists = await DatabaseUtils.emailExists("test2")
+
+    console.log(user1)
+    console.log(user2exists)
+
+
+    await DatabaseUtils.createCourse("test", "test", 123321, 1231)
+    await DatabaseUtils.createCourse("test2", "tes2t", 123321)
+
+
+    console.log(await DatabaseUtils.getCourseByID(1231))
+
+
+
+
+    await Database.exec("ROLLBACK")
+}
+
+test()

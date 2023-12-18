@@ -21,7 +21,7 @@ var express = require('express'),
             const course = await DatabaseUtils.getCourseByID(req.params.id);
             if(course == false)
             {
-                console.info("No course with id =" + req.params.id)
+                console.log("No course with id =" + req.params.id)
                 res.send("No course with this id")
             } else {
                 const filepath = path.join(__dirname, "..", "..", "public", "course", "index.ejs")
