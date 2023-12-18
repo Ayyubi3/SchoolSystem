@@ -10,9 +10,11 @@ class Database {
 
     static async init() {
 
+        console.group("Database.init()")
         try {
-            
-            this.pool = new Pool({
+
+
+            this.pool = await new Pool({
                 user: process.env.DBUSER,
                 host: process.env.DBHOST,
                 database: process.env.DBDATABASE,
@@ -21,24 +23,41 @@ class Database {
                 max: 10,
                 idleTimeoutMillis: 30000
             })
+
+            const data = await this.exec("SELECT;")
+            console.info(data)
+
+
+            if (data.rowCount != 1) {
+                new Error("SELECT; didnt expect response")
+            }
+
+            return true
         } catch (error) {
-         console.log(error)   
+            console.error(error)
+            return false
+        } finally {
+            console.groupEnd()
+
         }
+
     }
 
 
 
     static async exec(inpt, args) {
 
-        console.log("Database.exec = " + inpt)
 
         try {
+            console.group("Database.exec = " + inpt)
             let res = await this.pool.query(inpt, args)
-            //console.log(JSON.stringify(res) + "\n")
             return res
         } catch (error) {
-            console.log(error)
-            return
+            console.error(error)
+            return false
+
+        } finally {
+            console.groupEnd()
 
         }
     }
@@ -52,32 +71,40 @@ class DatabaseUtils {
 
 
 
-    static async emailExists(email) {
-        const data = await Database.exec(`SELECT * FROM "user" WHERE email=$1`, [
-            email,
-        ]);
-
-        if (data.rowCount == 0) return false;
-        return data.rows[0];
-    };
 
 
     static async createUser(firstname, lastname, email, password, id) {
-        console.log("Create user: ", firstname, lastname, email, password, id)
+
+        console.group("DatabaseUtils.createUser()")
+        console.info("Create user: ", firstname, lastname, email, password, id)
+
+        if (!firstname || !lastname || !email || !password) {
+            console.error("input is missing")
+            console.groupEnd()
+            return false
+
+        }
+
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(password, salt);
 
-
         const number = id ? id : await generateRandomID()
 
+        try {
 
-        const data = await Database.exec(
-            `INSERT INTO "user"(id, firstname, lastname, email, password) VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-            [number, firstname, lastname, email, hash]
-        );
+            const data = await Database.exec(
+                `INSERT INTO "user"(id, firstname, lastname, email, password) VALUES ('` + number + `', '` + firstname + `', '` + lastname + `', '` + email + `', '` + hash + `') RETURNING *`
+            );
 
-        if (data.rowCount == 0) return false;
-        return data.rows[0];
+            return data.rows[0]
+
+        } catch (error) {
+            console.error(error)
+            return false
+        } finally {
+            console.groupEnd()
+        }
+
 
 
 
@@ -88,11 +115,11 @@ class DatabaseUtils {
             let number;
             do {
                 number = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
-                console.log("Trying " + number)
+                console.info("Trying " + number)
 
                 output = await Database.exec('SELECT COUNT(*) FROM "user" WHERE id = ' + number)
                 const count = parseInt(output.rows[0].count)
-                console.log(number)
+                console.info(number)
                 if (count == 0) { out = true }
             } while (!out);
 
@@ -103,24 +130,29 @@ class DatabaseUtils {
 
 
     static async createCourse(name, html_markdown_code, creator_id, id) {
-        // FIXME: Test if creator id is included
-        // FIXME SELECT id FROM "subject" benutzen
 
+        console.log("Create course: ", name, html_markdown_code, creator_id, id)
 
+        if (!name || !html_markdown_code || !creator_id) {
+            console.log("input is missing")
+            return false
 
+        }
 
         const number = id ? id : await generateRandomID()
 
 
+        try {
+            const data = await Database.exec(
+                `INSERT INTO "subject"(id, name, html_markdown_code, creator_id) VALUES ($1, $2, $3, $4) RETURNING *`,
+                [number, name, html_markdown_code, creator_id]
+            );
+            return data.rows[0]
 
-        const data = await Database.exec(
-            `INSERT INTO "subject"(id, name, html_markdown_code, creator_id) VALUES ($1, $2, $3, $4) RETURNING *`,
-            [number, name, html_markdown_code, creator_id]
-        );
-
-        if (data.rowCount == 0) return false;
-        return data.rows[0];
-
+        } catch (error) {
+            console.log(error)
+            return false
+        }
 
 
         async function generateRandomID() {
@@ -221,6 +253,14 @@ class DatabaseUtils {
 
 
 
+    static async emailExists(email) {
+        const data = await Database.exec(`SELECT * FROM "user" WHERE email=$1`, [
+            email,
+        ]);
+
+        if (data.rowCount == 0) return false;
+        return data.rows[0];
+    };
 }
 
 
