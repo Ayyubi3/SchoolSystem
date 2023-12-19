@@ -11,7 +11,7 @@ class Database {
     static async init() {
 
         try {
-            
+
             this.pool = new Pool({
                 user: process.env.DBUSER,
                 host: process.env.DBHOST,
@@ -22,7 +22,7 @@ class Database {
                 idleTimeoutMillis: 30000
             })
         } catch (error) {
-         console.log(error)   
+            console.log(error)
         }
     }
 
@@ -51,19 +51,19 @@ class Database {
 class DatabaseUtils {
 
 
-
-    static async emailExists(email) {
-        const data = await Database.exec(`SELECT * FROM "user" WHERE email=$1`, [
-            email,
-        ]);
-
-        if (data.rowCount == 0) return false;
-        return data.rows[0];
-    };
+    //User
 
 
     static async createUser(firstname, lastname, email, password, id) {
         console.log("Create user: ", firstname, lastname, email, password, id)
+
+        if (!firstname || !lastname || !email || !password) {
+            console.error("input is missing")
+            return false
+
+        }
+
+
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(password, salt);
 
@@ -71,15 +71,18 @@ class DatabaseUtils {
         const number = id ? id : await generateRandomID()
 
 
-        const data = await Database.exec(
-            `INSERT INTO "user"(id, firstname, lastname, email, password) VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-            [number, firstname, lastname, email, hash]
-        );
-
-        if (data.rowCount == 0) return false;
-        return data.rows[0];
+        try {
+            const data = await Database.exec(
+                `INSERT INTO "user"(id, firstname, lastname, email, password) VALUES ('` + number + `', '` + firstname + `', '` + lastname + `', '` + email + `', '` + hash + `') RETURNING *`
+            );
 
 
+            return data.rows[0]
+
+        } catch (error) {
+            console.error(error)
+            return false
+        }
 
 
         async function generateRandomID() {
@@ -100,48 +103,14 @@ class DatabaseUtils {
         }
     };
 
-
-
-    static async createCourse(name, html_markdown_code, creator_id, id) {
-        // FIXME: Test if creator id is included
-        // FIXME SELECT id FROM "subject" benutzen
-
-
-
-
-        const number = id ? id : await generateRandomID()
-
-
-
-        const data = await Database.exec(
-            `INSERT INTO "subject"(id, name, html_markdown_code, creator_id) VALUES ($1, $2, $3, $4) RETURNING *`,
-            [number, name, html_markdown_code, creator_id]
-        );
+    static async emailExists(email) {
+        const data = await Database.exec(`SELECT * FROM "user" WHERE email=$1`, [
+            email,
+        ]);
 
         if (data.rowCount == 0) return false;
         return data.rows[0];
-
-
-
-        async function generateRandomID() {
-            let out = false
-            let output;
-            let number;
-            do {
-                number = Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
-                console.log("Trying " + number)
-
-                output = await Database.exec('SELECT COUNT(*) FROM "subject" WHERE id = ' + number)
-                const count = parseInt(output.rows[0].count)
-                console.log(number)
-                if (count == 0) { out = true }
-            } while (!out);
-
-            return number
-        }
-
-    }
-
+    };
 
     static async matchPassword(password, hashPassword) {
         const match = await bcrypt.compare(password, hashPassword);
@@ -159,12 +128,65 @@ class DatabaseUtils {
     };
 
 
+
+    //Course
+
+
+
+    static async createCourse(name, html_markdown_code, creator_id, id) {
+
+
+        console.log("Create course: ", name, html_markdown_code, creator_id, id)
+
+        if (!name || !html_markdown_code || !creator_id) {
+            console.log("input is missing")
+            return false
+
+        }
+
+        const number = id ? id : await generateRandomID()
+
+
+        try {
+            const data = await Database.exec(
+                `INSERT INTO "course"(id, name, html_markdown_code, creator_id) VALUES ($1, $2, $3, $4) RETURNING *`,
+                [number, name, html_markdown_code, creator_id]
+            );
+            return data.rows[0]
+
+        } catch (error) {
+            console.log(error)
+            return false
+        }
+
+        async function generateRandomID() {
+            let out = false
+            let output;
+            let number;
+            do {
+                number = Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
+                console.log("Trying " + number)
+
+                output = await Database.exec('SELECT COUNT(*) FROM "course" WHERE id = ' + number)
+                const count = parseInt(output.rows[0].count)
+                console.log(number)
+                if (count == 0) { out = true }
+            } while (!out);
+
+            return number
+        }
+
+    }
+
+
+
+
     static async getCourseByID(id) {
 
 
 
         const data = await Database.exec(
-            `SELECT * FROM subject WHERE id = ` + id
+            `SELECT * FROM course WHERE id = ` + id
         );
 
         console.log(data.rows[0])
@@ -179,7 +201,7 @@ class DatabaseUtils {
 
 
         const data = await Database.exec(
-            `INSERT INTO user_subject (user_id, subject_id) VALUES ($1, $2);`,
+            `INSERT INTO user_course (user_id, course_id) VALUES ($1, $2);`,
             [user_id, course_id]
         );
 
@@ -193,7 +215,7 @@ class DatabaseUtils {
 
 
         const data = await Database.exec(
-            `SELECT subject_id FROM user_subject WHERE user_id = ` + userID
+            `SELECT course_id FROM user_course WHERE user_id = ` + userID
         );
 
         console.log(data.rows)
@@ -202,15 +224,15 @@ class DatabaseUtils {
 
         const results = [];
 
-        for (const subjectId of data.rows) {
+        for (const courseId of data.rows) {
             try {
-                const query = `SELECT * FROM subject WHERE id = ` + subjectId.subject_id;
+                const query = `SELECT * FROM course WHERE id = ` + course.course_id;
 
                 const result = await Database.exec(query);
 
                 results.push(result.rows[0]);
             } catch (error) {
-                console.error(`Error fetching data for subject ID ${subjectId}:`, error);
+                console.error(`Error fetching data for course ID ${courseId}:`, error);
             }
         }
 

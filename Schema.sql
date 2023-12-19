@@ -1,0 +1,35 @@
+CREATE TABLE "user" (
+  id SERIAL PRIMARY KEY,
+  firstname VARCHAR(255) NOT NULL,
+  lastname VARCHAR(255) NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  email VARCHAR(255) UNIQUE NOT NULL
+);
+
+
+CREATE TABLE course (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  html_markdown_code TEXT,
+  creator_id INTEGER REFERENCES "user"(id)
+);
+
+
+CREATE TABLE user_course (
+  user_id INTEGER REFERENCES "user"(id),
+  course_id INTEGER REFERENCES course(id),
+  PRIMARY KEY (user_id, course_id)
+);
+
+
+
+CREATE TABLE "session" (
+  "sid" varchar NOT NULL COLLATE "default",
+  "sess" json NOT NULL,
+  "expire" timestamp(6) NOT NULL
+)
+WITH (OIDS=FALSE);
+
+ALTER TABLE "session" ADD CONSTRAINT "session_pkey" PRIMARY KEY ("sid") NOT DEFERRABLE INITIALLY IMMEDIATE;
+
+CREATE INDEX "IDX_session_expire" ON "session" ("expire");

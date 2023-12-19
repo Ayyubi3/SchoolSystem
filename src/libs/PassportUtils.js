@@ -23,7 +23,7 @@ passport.use(
                     return done(null, false);
                 }
 
-                const user = await DatabaseUtils.createUser(req.body);
+                const user = await DatabaseUtils.createUser(req.body.firstname, req.body.lastname, req.body.email, req.body.password);
                 return done(null, user);
             } catch (error) {
                 done(error);

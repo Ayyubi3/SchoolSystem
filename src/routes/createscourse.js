@@ -26,10 +26,10 @@ var express = require('express'),
     })
 
 
-    .post('/createcourse', (req, res) => {
+    .post('/createcourse', async (req, res) => {
         if (!req.isAuthenticated()) {
             // FIXME dont know if this works
-            console.log("Need to be authenticated to create subject")
+            console.log("Need to be authenticated to create course")
             res.redirect("/login");
         } else {
 
@@ -37,7 +37,11 @@ var express = require('express'),
             req.body.creator_id = req.user["id"]
             console.log(req.body)
 
-            DatabaseUtils.createCourse(req.body.name, req.body.html_markdown_code, req.body.creator_id)
+            const course = await DatabaseUtils.createCourse(req.body.name, req.body.html_markdown_code, req.body.creator_id)
+
+            DatabaseUtils.userJoinCourse(course.id, req.user["id"])
+
+            res.redirect("/course/" + course.id)
         }
 
     })

@@ -110,5 +110,3 @@ async function test()
 
     await Database.exec("ROLLBACK")
 }
-
-test()
