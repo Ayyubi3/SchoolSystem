@@ -14,14 +14,16 @@ var express = require('express'),
     .get('/course/:id', async (req, res) => {
 
         if (!req.isAuthenticated()) {
-            // FIXME: Send a message to index. maybe flash
+
             res.redirect("/login");
+
         } else {
 
             const course = await DatabaseUtils.getCourseByID(req.params.id);
+
             if(course == false)
             {
-                console.log("No course with id =" + req.params.id)
+                logger.warn("No course with id =" + req.params.id)
                 res.send("No course with this id")
             } else {
                 const filepath = path.join(__dirname, "..", "..", "public", "course", "index.ejs")
@@ -39,12 +41,14 @@ var express = require('express'),
     .post('/course/:id', async(req, res) => {
 
         if (!req.isAuthenticated()) {
-            // FIXME: Send a message to index. maybe flash
+
             res.redirect("/login");
+
         } else {
+            const userID = await req.user["id"]
 
-
-            DatabaseUtils.userJoinCourse(req.params.id, await req.user["id"])
+            const res = await DatabaseUtils.userJoinCourse(req.params.id, userID)
+            if (!res) logger.error("User " + userID + " couldnt join course " + req.params.id)
 
         }
 

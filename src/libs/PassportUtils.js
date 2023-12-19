@@ -40,12 +40,14 @@ passport.use(
         usernameField: "email",
         passwordField: "password",
       },
+
       async (email, password, done) => {
+
         try {
           const user = await DatabaseUtils.emailExists(email);
-          if (!user) return done(null, false);
+          if (!user) return done(null, false); // User doesnt exist
           const isMatch = await DatabaseUtils.matchPassword(password, user.password);
-          if (!isMatch) return done(null, false);
+          if (!isMatch) return done(null, false); // Incorrect password 
           return done(null, {id: user.id, email: user.email}); // Controlling which fields are exposed
         } catch (error) {
           return done(error, false);
@@ -57,9 +59,8 @@ passport.use(
 
 // When express-session tries to "safe" a session it saves this
 passport.serializeUser((user, done) => {
-  console.log(user)
+  logger.debug("Serializing" + user)
   done(null, user);
-  console.log("L")
 });
 
 passport.deserializeUser(async (user, done) => {

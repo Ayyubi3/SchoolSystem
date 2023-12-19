@@ -1,5 +1,5 @@
 const path = require("path")
-const {DatabaseUtils} = require("../libs/DatabaseUtils")
+const { DatabaseUtils } = require("../libs/DatabaseUtils")
 
 
 
@@ -8,12 +8,11 @@ const {DatabaseUtils} = require("../libs/DatabaseUtils")
 var express = require('express'),
     createcourserouter = express.Router();
 
-    createcourserouter
+createcourserouter
 
 
     .get('/createcourse', (req, res) => {
         if (!req.isAuthenticated()) {
-            // FIXME: Send a message to index. maybe flash
             res.redirect("/login");
         } else {
 
@@ -28,18 +27,18 @@ var express = require('express'),
 
     .post('/createcourse', async (req, res) => {
         if (!req.isAuthenticated()) {
-            // FIXME dont know if this works
-            console.log("Need to be authenticated to create course")
             res.redirect("/login");
         } else {
 
             // FIXME mache gerade nichts mit speakers
-            req.body.creator_id = req.user["id"]
-            console.log(req.body)
+            req.body.creator_id = await req.user["id"]
 
             const course = await DatabaseUtils.createCourse(req.body.name, req.body.html_markdown_code, req.body.creator_id)
-
-            DatabaseUtils.userJoinCourse(course.id, req.user["id"])
+            if (!course) {
+                logger.error(req.body + " couldnt be created")
+                res.redirect("/createcourse")
+            }
+            await DatabaseUtils.userJoinCourse(course.id, req.user["id"])
 
             res.redirect("/course/" + course.id)
         }

@@ -18,7 +18,9 @@ loginrouter
 
     })
 
-    .post('/login', passport.authenticate("local-login", {}),
+    .post('/login', passport.authenticate("local-login", {
+        failureRedirect: "/login"
+    }),
         (req, res, next) => {
             res.redirect("/")
         }
@@ -28,7 +30,7 @@ loginrouter
     .post('/logout', (req, res) => {
 
         req.logout((err) => {
-            console.log(err ? err : "Log out")
+            logger.debug(err ? err : "Log out")
         })
 
         res.redirect("/")

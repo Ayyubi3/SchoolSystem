@@ -9,6 +9,8 @@ class Database {
     static pool = null
 
     static async init() {
+        logger.debug("Database.init()")
+
 
         try {
 
@@ -22,7 +24,7 @@ class Database {
                 idleTimeoutMillis: 30000
             })
         } catch (error) {
-            console.log(error)
+            logger.error(error)
         }
     }
 
@@ -30,15 +32,15 @@ class Database {
 
     static async exec(inpt, args) {
 
-        console.log("Database.exec = " + inpt)
+        logger.info("Database.exec('" + inpt + "')")
 
         try {
             let res = await this.pool.query(inpt, args)
-            //console.log(JSON.stringify(res) + "\n")
+            logger.debug(res)
             return res
         } catch (error) {
-            console.log(error)
-            return
+            logger.error(error)
+            return false
 
         }
     }
@@ -55,10 +57,10 @@ class DatabaseUtils {
 
 
     static async createUser(firstname, lastname, email, password, id) {
-        console.log("Create user: ", firstname, lastname, email, password, id)
+        logger.info("Create user: ", firstname, lastname, email, password, id)
 
         if (!firstname || !lastname || !email || !password) {
-            console.error("input is missing")
+            logger.error("input is missing")
             return false
 
         }
@@ -69,6 +71,7 @@ class DatabaseUtils {
 
 
         const number = id ? id : await generateRandomID()
+        logger.debug("id for " + firstname + " " + lastname + " = " + number)
 
 
         try {
@@ -77,10 +80,11 @@ class DatabaseUtils {
             );
 
 
+            logger.debug("response after adding user " + data.rows[0])
             return data.rows[0]
 
         } catch (error) {
-            console.error(error)
+            logger.error(error)
             return false
         }
 
@@ -91,11 +95,10 @@ class DatabaseUtils {
             let number;
             do {
                 number = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
-                console.log("Trying " + number)
+                logger.debug("Trying " + number)
 
                 output = await Database.exec('SELECT COUNT(*) FROM "user" WHERE id = ' + number)
                 const count = parseInt(output.rows[0].count)
-                console.log(number)
                 if (count == 0) { out = true }
             } while (!out);
 
@@ -136,15 +139,16 @@ class DatabaseUtils {
     static async createCourse(name, html_markdown_code, creator_id, id) {
 
 
-        console.log("Create course: ", name, html_markdown_code, creator_id, id)
+        logger.info("Create course: ", name, html_markdown_code, creator_id, id)
 
         if (!name || !html_markdown_code || !creator_id) {
-            console.log("input is missing")
+            logger.error("input is missing")
             return false
 
         }
 
         const number = id ? id : await generateRandomID()
+        logger.debug("id for " + name + " " + creator_id + " = " + number)
 
 
         try {
@@ -152,10 +156,11 @@ class DatabaseUtils {
                 `INSERT INTO "course"(id, name, html_markdown_code, creator_id) VALUES ($1, $2, $3, $4) RETURNING *`,
                 [number, name, html_markdown_code, creator_id]
             );
+            logger.debug(data.rows[0])
             return data.rows[0]
 
         } catch (error) {
-            console.log(error)
+            logger.error(error)
             return false
         }
 
@@ -165,11 +170,10 @@ class DatabaseUtils {
             let number;
             do {
                 number = Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
-                console.log("Trying " + number)
+                logger.debug("Trying " + number)
 
                 output = await Database.exec('SELECT COUNT(*) FROM "course" WHERE id = ' + number)
                 const count = parseInt(output.rows[0].count)
-                console.log(number)
                 if (count == 0) { out = true }
             } while (!out);
 
@@ -189,25 +193,24 @@ class DatabaseUtils {
             `SELECT * FROM course WHERE id = ` + id
         );
 
-        console.log(data.rows[0])
 
         if (data.rowCount == 0) return false;
+        logger.debug("getCourseByID(" + id  + ") = " + data.rows[0])
+
         return data.rows[0];
     }
 
 
     static async userJoinCourse(course_id, user_id) {
-        console.log(course_id, user_id)
 
-
+        logger.debug("userJoinCourse")
         const data = await Database.exec(
             `INSERT INTO user_course (user_id, course_id) VALUES ($1, $2);`,
             [user_id, course_id]
         );
 
-        console.log(data)
+        if(!data) return false;
 
-        if (data.rowCount == 0) return false;
         return data.rows[0];
     }
 
@@ -218,7 +221,7 @@ class DatabaseUtils {
             `SELECT course_id FROM user_course WHERE user_id = ` + userID
         );
 
-        console.log(data.rows)
+        logger.debug(data.rows)
         if (data.rowCount == 0) return false;
 
 
@@ -232,7 +235,7 @@ class DatabaseUtils {
 
                 results.push(result.rows[0]);
             } catch (error) {
-                console.error(`Error fetching data for course ID ${courseId}:`, error);
+                logger.error(`Error fetching data for course ID ${courseId}:`, error);
             }
         }
 

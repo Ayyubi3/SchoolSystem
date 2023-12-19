@@ -9,22 +9,21 @@ const path = require("path")
 var express = require('express'),
     dashboardrouter = express.Router();
 
-    dashboardrouter
+dashboardrouter
 
 
     .get('/dashboard', async (req, res) => {
         if (!req.isAuthenticated()) {
-            // FIXME: Send a message to index. maybe flash
+
             res.redirect("/login");
         } else {
-            
-        const filepath = path.join(__dirname, "..", "..", "public", "dashboard", "index.ejs")
-        const courses = await DatabaseUtils.getUserCourses(await req.user["id"])
-        console.log(courses)
-        res.render(filepath, {Courses: courses})
+
+            const filepath = path.join(__dirname, "..", "..", "public", "dashboard", "index.ejs")
+            const courses = await DatabaseUtils.getUserCourses(await req.user["id"])
+            res.render(filepath, { Courses: courses })
 
         }
-    
+
 
 
     })
@@ -35,4 +34,4 @@ var express = require('express'),
 
 
 
-module.exports = { dashboardrouter };
+    module.exports = { dashboardrouter };
