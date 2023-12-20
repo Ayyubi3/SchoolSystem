@@ -82,20 +82,15 @@
   <nav>
 
     <% if (user) { %>
-    <form action="/logout?_method=DELETE" method="POST">
-      <button type="submit">Log Out</button>
-    </form>
+    <a href="#" onclick="logout()">Logout</a>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/profile">Profile</a>
 
-    <script>
-        // This is client-side JavaScript logic
-        console.log("test");
-      </script>
     <% } else { %>
     <a href="/login">Login</a>
     <a href="/register">Register</a>
     <% } %>
 
-    <a href="/dashboard">Dashboard</a>
 
 
 
@@ -111,5 +106,18 @@
   </footer>
 
 </body>
+
+
+<script>
+  async function logout() {
+    await fetch("/logout", {
+      method: "POST"
+    })
+
+
+    document.location.href = "/"
+
+  }
+</script>
 
 </html>

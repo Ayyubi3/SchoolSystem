@@ -30,7 +30,7 @@ loginrouter
     .post('/logout', (req, res) => {
 
         req.logout((err) => {
-            logger.debug(err ? err : "Log out")
+            logger.info(err ? err : "Log out")
         })
 
         res.redirect("/")

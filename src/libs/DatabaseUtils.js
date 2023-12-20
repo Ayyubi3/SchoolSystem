@@ -36,7 +36,7 @@ class Database {
 
         try {
             let res = await this.pool.query(inpt, args)
-            logger.debug(res)
+            logger.debug(JSON.stringify(res))
             return res
         } catch (error) {
             logger.error(error)
@@ -123,13 +123,22 @@ class DatabaseUtils {
     static async getUserByID(id) {
 
         const data = await Database.exec(
-            `SELECT * FROM "user" WHERE id = ` + id + `;`
+            `SELECT * FROM "user" WHERE id = ` + id
         );
 
         if (data.rowCount == 0) return false;
         return data.rows[0];
     };
 
+    static async deleteUser(id) {
+
+        const data = await Database.exec(
+            `DELETE FROM "user" WHERE id = ` + id
+        );
+
+        if (data.rowCount == 0) return false;
+        return data.rows[0];
+    };
 
 
     //Course
@@ -229,11 +238,8 @@ class DatabaseUtils {
 
         for (const courseId of data.rows) {
             try {
-                const query = `SELECT * FROM course WHERE id = ` + course.course_id;
 
-                const result = await Database.exec(query);
-
-                results.push(result.rows[0]);
+                results.push(await DatabaseUtils.getCourseByID(courseId.course_id));
             } catch (error) {
                 logger.error(`Error fetching data for course ID ${courseId}:`, error);
             }

@@ -1,7 +1,7 @@
 const winston = require('winston');
 
 const logger = winston.createLogger({
-  level: 'info',
+  level: "info",
   levels: {
     error: 0, // Critical errors
     warn: 1,  // Something may be wrong

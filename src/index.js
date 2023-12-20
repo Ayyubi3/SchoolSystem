@@ -71,6 +71,9 @@ const { createcourserouter } = require("./routes/createscourse")
 app.use(createcourserouter)
 const { courserouter } = require("./routes/course")
 app.use(courserouter)
+const { profilerouter } = require("./routes/profile")
+app.use(profilerouter)
+
 
 
 
