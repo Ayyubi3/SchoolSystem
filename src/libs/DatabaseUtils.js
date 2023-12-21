@@ -220,7 +220,7 @@ class DatabaseUtils {
 
         if(!data) return false;
 
-        return data.rows[0];
+        return true;
     }
 
     static async getUserCourses(userID) {
@@ -249,6 +249,17 @@ class DatabaseUtils {
         return results;
 
     }
+
+
+    static async deleteCourse(id) {
+
+        const data = await Database.exec(
+            `DELETE FROM "course" WHERE id = ` + id
+        );
+
+        if (data.rowCount == 0) return false;
+        return data.rows[0];
+    };
 
 
 

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -59,7 +60,10 @@
       background-color: #45a049;
     }
   </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+  <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 </head>
+
 <body>
   <form action="/createcourse" method="post">
     <h1>Subject Information</h1>
@@ -69,11 +73,18 @@
 
     <label for="speaker">List of Speakers (comma-separated):</label>
     <input type="text" id="speakers" name="speaker" required>
-
-    <label for="html_markdown_code">HTML Code:</label>
-    <textarea id="htmlCode" name="html_markdown_code" rows="8" required></textarea>
+    
+    <label for="html_markdown_code">Markdown Code:</label>
+    <input type="hidden" id="codeInput" name="html_markdown_code">
+    <script>
+      var simplemde = new SimpleMDE({
+        element: document.getElementById("codeInput")
+      });
+    </script>
 
     <input type="submit" value="Submit">
+
   </form>
 </body>
+
 </html>

@@ -12,9 +12,6 @@ createcourserouter
 
 
     .get('/createcourse', (req, res) => {
-        if (!req.isAuthenticated()) {
-            res.redirect("/login");
-        } else {
 
             const filepath = path.join(__dirname, "..", "..", "public", "createcourse", "index.ejs")
             res.render(filepath, {error: req.flash("createcourse")})
@@ -22,13 +19,10 @@ createcourserouter
 
 
 
-    })
+    )
 
 
     .post('/createcourse', async (req, res) => {
-        if (!req.isAuthenticated()) {
-            res.redirect("/login");
-        } else {
 
             // FIXME mache gerade nichts mit speakers
             req.body.creator_id = await req.user["id"]
@@ -43,7 +37,7 @@ createcourserouter
             await DatabaseUtils.userJoinCourse(course.id, req.user["id"])
 
             res.redirect("/course/" + course.id)
-        }
+        
 
     })
 

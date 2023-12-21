@@ -59,15 +59,29 @@ app.get('/', async (req, res) => {
         const user = await DatabaseUtils.getUserByID(await req.user["id"])
         name = ", " + user.firstname + " " + user.lastname
     }
-    res.render(require("path").join("..", "public", "index", "index.ejs"), { user: name, alertMessage: null })
+    res.render(require("path").join("..", "public", "index", "index.ejs"), { user: name, alertMessage: req.flash("index") })
 })
 
 
+
+
+const isAuthenticated = (req, res, next) => {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect("/login");
+};
 
 const { registerrouter } = require("./routes/register")
 app.use(registerrouter)
 const { loginrouter } = require("./routes/login")
 app.use(loginrouter)
+
+
+app.use(isAuthenticated)
+
+
+
 const { dashboardrouter } = require("./routes/dashboard")
 app.use(dashboardrouter)
 const { createcourserouter } = require("./routes/createscourse")
