@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -47,6 +48,7 @@
   </style>
   <title>School Course Dashboard</title>
 </head>
+
 <body>
 
   <header>
@@ -59,15 +61,25 @@
     <ul>
       <% if(Courses) { %>
       <% Courses.forEach((Course => { %>
-        <li>
-          <a href="/course/<%=Course.id%>">
-            <span><%= Course.name %></span>
-          </a>
-        </li>
-        
-        <% }))} %>
+      <li>
+        <a href="/course/<%=Course.id%>">
+          <span><%= Course.name %></span>
+        </a>
+      </li>
+
+      <% }))} %>
     </ul>
   </section>
 
+  <% if(message) { %>
+  <% message.forEach((item) => { %>
+  <script>
+    alert("<%= item %>")
+  </script>
+  <% }); %>
+  <% } %>
+
+
 </body>
+
 </html>

@@ -20,7 +20,9 @@ passport.use(
                 const userExists = await DatabaseUtils.emailExists(email)
 
                 if (userExists) {
-                    return done(null, false);
+                  logger.warn("Error while registering: email already exists")
+                  req.flash("register", "Email already exists")
+                  return done(null, false);
                 }
 
                 const user = await DatabaseUtils.createUser(req.body.firstname, req.body.lastname, req.body.email, req.body.password);
@@ -39,15 +41,23 @@ passport.use(
       {
         usernameField: "email",
         passwordField: "password",
+        passReqToCallback: true
       },
 
-      async (email, password, done) => {
+      async (req, email, password, done) => {
 
         try {
           const user = await DatabaseUtils.emailExists(email);
-          if (!user) return done(null, false); // User doesnt exist
+          if (!user) 
+          {
+            req.flash("login", "Account doesnt exist!")
+            return done(null, false); // User doesnt exist
+          }  
           const isMatch = await DatabaseUtils.matchPassword(password, user.password);
-          if (!isMatch) return done(null, false); // Incorrect password 
+          if (!isMatch) {
+            req.flash("login", "Wrong Password!")
+            return done(null, false); // Incorrect password 
+          }
           return done(null, {id: user.id, email: user.email}); // Controlling which fields are exposed
         } catch (error) {
           return done(error, false);

@@ -66,6 +66,17 @@
             </div>
             <button type="submit">Login</button>
           </form>
+
+
+          <ul>
+
+            <% if(message) { %>
+              <% message.forEach((item) => { %>
+                <li><%= item %></li>
+              <% }); %>
+              <% } %>
+
+            </ul>
     </div>
 
 </body>

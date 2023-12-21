@@ -17,7 +17,7 @@ createcourserouter
         } else {
 
             const filepath = path.join(__dirname, "..", "..", "public", "createcourse", "index.ejs")
-            res.render(filepath, {})
+            res.render(filepath, {error: req.flash("createcourse")})
         }
 
 
@@ -36,7 +36,9 @@ createcourserouter
             const course = await DatabaseUtils.createCourse(req.body.name, req.body.html_markdown_code, req.body.creator_id)
             if (!course) {
                 logger.error(req.body + " couldnt be created")
+                req.flash("createcourse", "Could not create course")
                 res.redirect("/createcourse")
+
             }
             await DatabaseUtils.userJoinCourse(course.id, req.user["id"])
 

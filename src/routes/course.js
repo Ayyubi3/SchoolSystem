@@ -27,7 +27,10 @@ var express = require('express'),
                 res.send("No course with this id")
             } else {
                 const filepath = path.join(__dirname, "..", "..", "public", "course", "index.ejs")
-                res.render(filepath, {course})
+
+                
+
+                res.render(filepath, {course, error: req.flash("course")})
 
             }
 
@@ -48,8 +51,12 @@ var express = require('express'),
             const userID = await req.user["id"]
 
             const res = await DatabaseUtils.userJoinCourse(req.params.id, userID)
-            if (!res) logger.error("User " + userID + " couldnt join course " + req.params.id)
-
+            if (!res) 
+            {
+                logger.error("User " + userID + " couldnt join course " + req.params.id)
+                req.flash("course", "Could not join " + req.params.id)
+                req.redirect("/course/" + req.params.id)
+            }
         }
 
 

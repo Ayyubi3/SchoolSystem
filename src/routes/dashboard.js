@@ -20,7 +20,7 @@ dashboardrouter
 
             const filepath = path.join(__dirname, "..", "..", "public", "dashboard", "index.ejs")
             const courses = await DatabaseUtils.getUserCourses(await req.user["id"])
-            res.render(filepath, { Courses: courses })
+            res.render(filepath, { Courses: courses, message: [] })
 
         }
 

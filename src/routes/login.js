@@ -14,12 +14,13 @@ loginrouter
     .get('/login', (req, res) => {
 
         const filepath = path.join(__dirname, "..", "..", "public", "login", "index.ejs")
-        res.render(filepath)
+        res.render(filepath, { message: req.flash("login") })
 
     })
 
     .post('/login', passport.authenticate("local-login", {
-        failureRedirect: "/login"
+        failureRedirect: "/login",
+        failureFlash: true
     }),
         (req, res, next) => {
             res.redirect("/")

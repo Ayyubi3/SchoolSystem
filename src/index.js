@@ -9,6 +9,8 @@ const app = express()
 const session = require('express-session')
 const pgSession = require('connect-pg-simple')(session)
 
+const flash = require("connect-flash")
+
 
 const port = process.env.SERVER_PORT
 
@@ -48,6 +50,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
+app.use(flash())
 
 app.get('/', async (req, res) => {
 
