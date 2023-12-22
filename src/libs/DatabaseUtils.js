@@ -112,7 +112,17 @@ class DatabaseUtils {
         ]);
 
         if (data.rowCount == 0) return false;
-        return data.rows[0];
+        return true
+    };
+
+
+    static async getUserByEmail(email) {
+        const data = await Database.exec(`SELECT * FROM "user" WHERE email=$1`, [
+            email,
+        ]);
+
+        if (data.rowCount == 0) return false;
+        return data.rows[0]
     };
 
     static async matchPassword(password, hashPassword) {
@@ -137,7 +147,7 @@ class DatabaseUtils {
         );
 
         if (data.rowCount == 0) return false;
-        return data.rows[0];
+        return true
     };
 
 
@@ -190,6 +200,55 @@ class DatabaseUtils {
         }
 
     }
+
+
+
+
+    static async deleteCourse(id) {
+
+        const data = await Database.exec(
+            `DELETE FROM "course" WHERE id = ` + id
+        );
+
+        if (data.rowCount == 0) return false;
+        return true
+    };
+
+
+    
+    static async updateCourse(creator_id, course_id, name, html_markdown_code) {
+
+        if(!name && !html_markdown_code)
+        {
+            logger.error("updateCourse name AND html_markdown_code are false")
+            return false
+        }
+
+        let cmd = `UPDATE "course" `
+
+        if(name)
+        {
+            cmd += `SET name = ` + name + ` `
+        }
+
+        if(html_markdown_code)
+        {
+            cmd += `SET html_markdown_code = ` + html_markdown_code + ` `
+        }
+
+        cmd +=  `WHERE id = ` + course_id + ` creator_id = ` + creator_id
+
+        const data = await Database.exec(
+            cmd
+        );
+
+        if (!data) return false;
+        return true
+    };
+
+
+
+
 
 
 
@@ -251,15 +310,6 @@ class DatabaseUtils {
     }
 
 
-    static async deleteCourse(id) {
-
-        const data = await Database.exec(
-            `DELETE FROM "course" WHERE id = ` + id
-        );
-
-        if (data.rowCount == 0) return false;
-        return data.rows[0];
-    };
 
 
 

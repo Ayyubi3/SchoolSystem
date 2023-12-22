@@ -86,6 +86,20 @@
     <a href="/dashboard">Dashboard</a>
     <a href="/profile">Profile</a>
 
+
+
+    <script>
+      async function logout() {
+        await fetch("/logout", {
+          method: "POST"
+        })
+
+
+        document.location.href = "/"
+
+      }
+    </script>
+
     <% } else { %>
     <a href="/login">Login</a>
     <a href="/register">Register</a>
@@ -105,19 +119,19 @@
     <p>&copy; 2023 Hochschule Eden. Alle Rechte vorbehalten.</p>
   </footer>
 
+
+
+
+  <% if(message) { %>
+    <% message.forEach((item) => { %>
+  <script>
+    alert("<%= item %>")
+    </script>
+    <% }); %>
+    <% } %>
 </body>
 
 
-<script>
-  async function logout() {
-    await fetch("/logout", {
-      method: "POST"
-    })
 
-
-    document.location.href = "/"
-
-  }
-</script>
 
 </html>

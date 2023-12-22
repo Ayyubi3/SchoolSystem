@@ -3,8 +3,6 @@ const path = require("path")
 
 
 
-
-
 var express = require('express'),
     loginrouter = express.Router();
 
@@ -14,9 +12,11 @@ loginrouter
     .get('/login', (req, res) => {
 
         const filepath = path.join(__dirname, "..", "..", "public", "login", "index.ejs")
-        res.render(filepath, { message: req.flash("login") })
+        res.render(filepath, { message: req.flash("main") })
 
     })
+
+
 
     .post('/login', passport.authenticate("local-login", {
         failureRedirect: "/login",

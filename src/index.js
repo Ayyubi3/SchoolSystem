@@ -15,16 +15,19 @@ const flash = require("connect-flash")
 const port = process.env.SERVER_PORT
 
 
+
 app.set("view-engine", "ejs")
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Database Configuration
+
+
 const { Database, DatabaseUtils } = require("./libs/DatabaseUtils")
 Database.init()
 
-// Express Session Configuration
+
+
 const sessionConfig = {
     store: new pgSession({
 
@@ -43,11 +46,14 @@ const sessionConfig = {
 
 app.use(session(sessionConfig))
 
-// Passport Configuration
+
+
 const { passport } = require("./libs/PassportUtils")
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+
 
 
 app.use(flash())
@@ -59,18 +65,11 @@ app.get('/', async (req, res) => {
         const user = await DatabaseUtils.getUserByID(await req.user["id"])
         name = ", " + user.firstname + " " + user.lastname
     }
-    res.render(require("path").join("..", "public", "index", "index.ejs"), { user: name, alertMessage: req.flash("index") })
+    res.render(require("path").join("..", "public", "index", "index.ejs"), { user: name, message: req.flash("main") })
 })
 
 
 
-
-const isAuthenticated = (req, res, next) => {
-    if (req.isAuthenticated()) {
-        return next();
-    }
-    res.redirect("/login");
-};
 
 const { registerrouter } = require("./routes/register")
 app.use(registerrouter)
@@ -78,7 +77,14 @@ const { loginrouter } = require("./routes/login")
 app.use(loginrouter)
 
 
-app.use(isAuthenticated)
+app.use(
+    (req, res, next) => {
+        if (req.isAuthenticated()) {
+            return next();
+        }
+        res.redirect("/login");
+    }
+)
 
 
 

@@ -14,31 +14,29 @@ createcourserouter
     .get('/createcourse', (req, res) => {
 
             const filepath = path.join(__dirname, "..", "..", "public", "createcourse", "index.ejs")
-            res.render(filepath, {error: req.flash("createcourse")})
-        }
+            res.render(filepath, {message: req.flash("main")})
 
-
-
-    )
+        })
 
 
     .post('/createcourse', async (req, res) => {
 
-            // FIXME mache gerade nichts mit speakers
             req.body.creator_id = await req.user["id"]
 
             const course = await DatabaseUtils.createCourse(req.body.name, req.body.html_markdown_code, req.body.creator_id)
             if (!course) {
                 logger.error(req.body + " couldnt be created")
-                req.flash("createcourse", "Could not create course")
+                req.flash("main", "Could not create course")
                 res.redirect("/createcourse")
+                return
 
             }
+
             await DatabaseUtils.userJoinCourse(course.id, req.user["id"])
+            logger.info(req.body.creator_id + " creates " + req.body.name)
 
             res.redirect("/course/" + course.id)
         
-
     })
 
 

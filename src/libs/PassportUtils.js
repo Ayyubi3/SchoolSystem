@@ -21,7 +21,7 @@ passport.use(
 
                 if (userExists) {
                   logger.warn("Error while registering: email already exists")
-                  req.flash("register", "Email already exists")
+                  req.flash("main", "Email already exists")
                   return done(null, false);
                 }
 
@@ -47,15 +47,16 @@ passport.use(
       async (req, email, password, done) => {
 
         try {
-          const user = await DatabaseUtils.emailExists(email);
-          if (!user) 
+          const userExists = await DatabaseUtils.emailExists(email);
+          if (!userExists) 
           {
-            req.flash("login", "Account doesnt exist!")
+            req.flash("main", "Account doesnt exist!")
             return done(null, false); // User doesnt exist
           }  
+          const user = await DatabaseUtils.getUserByEmail(email)
           const isMatch = await DatabaseUtils.matchPassword(password, user.password);
           if (!isMatch) {
-            req.flash("login", "Wrong Password!")
+            req.flash("main", "Wrong Password!")
             return done(null, false); // Incorrect password 
           }
           return done(null, {id: user.id, email: user.email}); // Controlling which fields are exposed
@@ -67,14 +68,18 @@ passport.use(
 )
 
 
-// When express-session tries to "safe" a session it saves this
+// When express-session tries to "safe" a session, it saves this
 passport.serializeUser((user, done) => {
+  console.log(user)
   logger.debug("Serializing" + user)
   done(null, user);
 });
 
+// TODO
+// Currently if the req.user object is called it will make a request to the db
+// Maybe have an array that saves the requested user to have less DB requests ?
+// But than have to deal with what todo when user data changes in DB 
 passport.deserializeUser(async (user, done) => {
-
   try {
       let out = await DatabaseUtils.getUserByID(user.id);
       done(null, out);

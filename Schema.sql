@@ -32,3 +32,16 @@ WITH (OIDS=FALSE);
 ALTER TABLE "session" ADD CONSTRAINT "session_pkey" PRIMARY KEY ("sid") NOT DEFERRABLE INITIALLY IMMEDIATE;
 
 CREATE INDEX "IDX_session_expire" ON "session" ("expire");
+
+
+
+
+CREATE OR REPLACE FUNCTION read()
+RETURNS VOID AS $$
+BEGIN
+    PERFORM * FROM "user";
+    PERFORM * FROM "course";
+    PERFORM * FROM "user_course";
+    PERFORM * FROM "session";
+END;
+$$ LANGUAGE plpgsql;
