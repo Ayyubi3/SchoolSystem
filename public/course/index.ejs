@@ -22,18 +22,10 @@
 
     const name = "<%= name %>"
     console.log('You joined')
-    socket.emit('new-user', name)
+    socket.emit('join-room', "<%= course.id %>")
 
     socket.on('chat-message', data => {
       console.log(`${data.name}: ${data.message}`)
-    })
-
-    socket.on('user-connected', name => {
-      console.log(`${name} connected`)
-    })
-
-    socket.on('user-disconnected', name => {
-      console.log(`${name} disconnected`)
     })
 
 
@@ -41,7 +33,7 @@
     function test(inpt) {
 
       const message = inpt
-      socket.emit('send-chat-message', message)
+      socket.emit('send-chat-message', {name, room: "<%= course.id %>", message})
     }
   </script>
 
