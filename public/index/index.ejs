@@ -41,15 +41,6 @@
       margin: 0 15px;
     }
 
-    nav form button {
-      font-size: medium;
-      background-color: none;
-      background: none;
-      border: none;
-      color: #fff;
-      text-decoration: none;
-      margin: 0 15px;
-    }
 
     section {
       padding: 20px;
@@ -71,12 +62,6 @@
     <h1>Hochschule Eden</h1>
   </header>
 
-  <% if (alertMessage && alertMessage.length> 0) { console.log(alertMessage) %>
-
-  <script>
-    alert("<%= alertMessage %>")
-  </script>
-  <% } %>
 
 
   <nav>
@@ -87,34 +72,34 @@
     <a href="/profile">Profile</a>
 
 
-
     <script>
       async function logout() {
-        await fetch("/logout", {
-          method: "POST"
-        })
-
+        await fetch("/logout", { method: "POST" })
 
         document.location.href = "/"
-
       }
     </script>
 
+
     <% } else { %>
+
     <a href="/login">Login</a>
     <a href="/register">Register</a>
+    
     <% } %>
 
-
-
-
   </nav>
+
+
 
   <section>
     <h2>Herzlich willkommen an unserer Universität<%= user %>!</h2>
     <p>Dies ist eine kurze Einführung in unsere Universität. Sie können bei Bedarf weitere Inhalte und
       Abschnitte hinzufügen.</p>
   </section>
+
+
+
   <footer>
     <p>&copy; 2023 Hochschule Eden. Alle Rechte vorbehalten.</p>
   </footer>

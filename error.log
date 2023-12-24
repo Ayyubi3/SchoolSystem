@@ -23,3 +23,39 @@
 {"code":"42703","file":"parse_relation.c","length":113,"level":"error","line":"3718","name":"error","position":"33","routine":"errorMissingColumn","severity":"FEHLER"}
 {"code":"42703","file":"parse_relation.c","length":113,"level":"error","line":"3718","name":"error","position":"33","routine":"errorMissingColumn","severity":"FEHLER"}
 {"code":"42703","file":"parse_relation.c","length":113,"level":"error","line":"3718","name":"error","position":"33","routine":"errorMissingColumn","severity":"FEHLER"}
+{"level":"error","message":"Couldnt delete course"}
+{"code":"42601","file":"scan.l","length":114,"level":"error","line":"1245","name":"error","position":"33","routine":"scanner_yyerror","severity":"FEHLER"}
+{"code":"42601","file":"scan.l","length":114,"level":"error","line":"1245","name":"error","position":"33","routine":"scanner_yyerror","severity":"FEHLER"}
+{"code":"42601","file":"scan.l","length":114,"level":"error","line":"1245","name":"error","position":"33","routine":"scanner_yyerror","severity":"FEHLER"}
+{"level":"error","message":"Couldnt edit course"}
+{"level":"error","message":"Couldnt edit course"}
+{"level":"error","message":"Couldnt edit course"}
+{"level":"error","message":"Couldnt edit course"}
+{"level":"error","message":"Couldnt edit course"}
+{"code":"23505","constraint":"user_course_pkey","detail":"Schlüssel »(user_id, course_id)=(315420, 4043)« existiert bereits.","file":"nbtinsert.c","length":247,"level":"error","line":"673","name":"error","routine":"_bt_check_unique","schema":"public","severity":"FEHLER","table":"user_course"}
+{"level":"error","message":"User 315420 couldnt join course 4043"}
+{"level":"error","message":"updateCourse name AND html_markdown_code are false"}
+{"level":"error","message":"User 315420 couldnt update course 4043"}
+{"level":"error","message":"updateCourse name AND html_markdown_code are false"}
+{"level":"error","message":"User 315420 couldnt update course 4043"}
+{"level":"error","message":"updateCourse name AND html_markdown_code are false"}
+{"level":"error","message":"User 315420 couldnt update course 4043"}
+{"level":"error","message":"updateCourse name AND html_markdown_code are false"}
+{"level":"error","message":"User 315420 couldnt update course 4043"}
+{"code":"42601","file":"scan.l","length":88,"level":"error","line":"1245","name":"error","position":"33","routine":"scanner_yyerror","severity":"FEHLER"}
+{"level":"error","message":"User 315420 couldnt update course 4043"}
+{"code":"42601","file":"scan.l","length":95,"level":"error","line":"1245","name":"error","position":"79","routine":"scanner_yyerror","severity":"FEHLER"}
+{"level":"error","message":"User 315420 couldnt update course 4043"}
+{"code":"42601","file":"scan.l","length":114,"level":"error","line":"1245","name":"error","position":"74","routine":"scanner_yyerror","severity":"FEHLER"}
+{"level":"error","message":"User 315420 couldnt update course 4043"}
+{"code":"42703","file":"parse_relation.c","length":108,"level":"error","line":"3718","name":"error","position":"30","routine":"errorMissingColumn","severity":"FEHLER"}
+{"level":"error","message":"User 315420 couldnt update course 4043"}
+{"level":"error","message":"Couldnt delete course"}
+{"level":"error","message":"Couldnt delete course"}
+{"level":"error","message":"Couldnt delete course"}
+{"code":"42P01","file":"parse_relation.c","length":131,"level":"error","line":"3652","name":"error","position":"33","routine":"errorMissingRTE","severity":"FEHLER"}
+{"code":"42P01","file":"parse_relation.c","length":131,"level":"error","line":"3652","name":"error","position":"33","routine":"errorMissingRTE","severity":"FEHLER"}
+{"code":"42P01","file":"parse_relation.c","length":131,"level":"error","line":"3652","name":"error","position":"33","routine":"errorMissingRTE","severity":"FEHLER"}
+{"code":"42P01","file":"parse_relation.c","length":131,"level":"error","line":"3652","name":"error","position":"33","routine":"errorMissingRTE","severity":"FEHLER"}
+{"code":"42P01","file":"parse_relation.c","length":131,"level":"error","line":"3652","name":"error","position":"33","routine":"errorMissingRTE","severity":"FEHLER"}
+{"code":"42P01","file":"parse_relation.c","length":131,"level":"error","line":"3652","name":"error","position":"33","routine":"errorMissingRTE","severity":"FEHLER"}

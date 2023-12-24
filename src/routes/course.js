@@ -17,6 +17,9 @@ courserouter
 
     .get('/course/:id', async (req, res) => {
 
+        
+        console.log(req.params)
+
         const course = await DatabaseUtils.getCourseByID(req.params.id);
 
         if (course == false) {
@@ -51,14 +54,34 @@ courserouter
 
         const filepath = path.join(__dirname, "..", "..", "public", "course", "index.ejs")
 
-        res.render(filepath, { isMember, isCreator, course, message: req.flash("main") })
+        res.render(filepath, { name: await req.user["email"], isMember, isCreator, course, message: req.flash("main") })
 
 
-    }
+    })
+
+    .get('/course/:id/edit', async (req, res) => {
+
+        const course = await DatabaseUtils.getCourseByID(req.params.id)
+
+        if (!course) {
+            res.send("Course doesnt exist")
+            return
+        }
+
+        const userID = await req.user["id"]
+
+        let canEdit = course.creator_id == userID
 
 
+        const filepath = path.join(__dirname, "..", "..", "public", "editcourse", "index.ejs")
 
-    )
+
+       const url = "/course/" + course.id
+
+        res.render( filepath, { url, course, message: req.flash("main") })
+
+
+    })
 
 
     .post('/course/:id', async (req, res) => {
@@ -74,7 +97,6 @@ courserouter
             return
         }
 
-        res.send("Joined Course")
 
         res.redirect("/course/" + req.params.id)
 
@@ -83,10 +105,10 @@ courserouter
 
     .put('/course/:id', async (req, res) => {
 
-
         const user_ID = await req.user["id"]
 
-        const data = await DatabaseUtils.updateCourse(user_ID, req.params.id, req.body.name, req.body.html_markdown_code)
+        console.log(req.body)
+        const data = await DatabaseUtils.updateCourse(user_ID, req.params.id, req.body.speaker, req.body.html_markdown_code)
 
         if(!data)
         {
@@ -107,7 +129,7 @@ courserouter
         const course = await DatabaseUtils.getCourseByID(req.params.id)
 
         if (!course) {
-            res.send("Course doesnt exist")
+            res.status(500).json({error: "Course doesnt exist"})
         }
 
         const userID = await req.user["id"]

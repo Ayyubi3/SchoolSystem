@@ -22,6 +22,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 
+const cors = require('cors');
+app.use(cors());
+
 
 const { Database, DatabaseUtils } = require("./libs/DatabaseUtils")
 Database.init()
@@ -53,6 +56,8 @@ const { passport } = require("./libs/PassportUtils")
 app.use(passport.initialize());
 app.use(passport.session());
 
+
+const io = require("./libs/SocketUtils")
 
 
 

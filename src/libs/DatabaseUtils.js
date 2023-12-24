@@ -224,19 +224,19 @@ class DatabaseUtils {
             return false
         }
 
-        let cmd = `UPDATE "course" `
+        let cmd = ` UPDATE "course" SET `
 
         if(name)
         {
-            cmd += `SET name = ` + name + ` `
+            cmd += ` name = '` + name + `' ,`
         }
 
         if(html_markdown_code)
         {
-            cmd += `SET html_markdown_code = ` + html_markdown_code + ` `
+            cmd += ` html_markdown_code = '` + html_markdown_code + `' `
         }
 
-        cmd +=  `WHERE id = ` + course_id + ` creator_id = ` + creator_id
+        cmd +=  `WHERE id = ` + course_id + ` AND creator_id = ` + creator_id
 
         const data = await Database.exec(
             cmd

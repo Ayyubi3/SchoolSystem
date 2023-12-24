@@ -36,12 +36,4 @@ CREATE INDEX "IDX_session_expire" ON "session" ("expire");
 
 
 
-CREATE OR REPLACE FUNCTION read()
-RETURNS VOID AS $$
-BEGIN
-    PERFORM * FROM "user";
-    PERFORM * FROM "course";
-    PERFORM * FROM "user_course";
-    PERFORM * FROM "session";
-END;
-$$ LANGUAGE plpgsql;
+DELETE FROM "session"; DELETE FROM "user_course"; DELETE FROM "course";  DELETE FROM "user";
