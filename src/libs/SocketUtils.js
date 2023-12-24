@@ -1,4 +1,7 @@
-const io = require('socket.io')(process.env.SOCKETPORT, {
+const { Server } = require("socket.io");
+
+
+const io = new Server(process.env.SOCKETPORT, {
   cors: {
     origin: "http://localhost:3000",
     methods: ["GET", "POST"],
@@ -9,7 +12,13 @@ const io = require('socket.io')(process.env.SOCKETPORT, {
 
 const users = {}
 
-io.on('connection', socket => {
+const {SessionInstance} = require("../index")
+
+io.engine.use(SessionInstance)
+
+io.on('connection', async socket => {
+
+  const user = await socket.request.session.passport.user
 
   socket.on('new-user', name => {
     users[socket.id] = name
@@ -34,24 +43,8 @@ io.on('connection', socket => {
 
 
   })
-
-
-
-
-
-
-
-  /*
-
-
-
-  socket.on('send-chat-message', message => {
-    socket.broadcast.emit('chat-message', { message: message, name: users[socket.id] })
-  })
-
-  socket.on('disconnect', () => {
-    socket.broadcast.emit('user-disconnected', users[socket.id])
-    delete users[socket.id]
-  })*/
-
 })
+
+
+
+module.exports = {io}

@@ -31,7 +31,7 @@ Database.init()
 
 
 
-const sessionConfig = {
+const SessionInstance = session({
     store: new pgSession({
 
         pool: Database.pool,
@@ -45,9 +45,13 @@ const sessionConfig = {
         maxAge: 1000 * 60 * 10,
         aameSite: true,
     }
-}
+})
 
-app.use(session(sessionConfig))
+module.exports = {SessionInstance}
+
+
+
+app.use(SessionInstance)
 
 
 
@@ -57,7 +61,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-const io = require("./libs/SocketUtils")
+const {io} = require("./libs/SocketUtils")
+
 
 
 

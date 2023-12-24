@@ -17,8 +17,6 @@ courserouter
 
     .get('/course/:id', async (req, res) => {
 
-        
-        console.log(req.params)
 
         const course = await DatabaseUtils.getCourseByID(req.params.id);
 
@@ -107,7 +105,6 @@ courserouter
 
         const user_ID = await req.user["id"]
 
-        console.log(req.body)
         const data = await DatabaseUtils.updateCourse(user_ID, req.params.id, req.body.speaker, req.body.html_markdown_code)
 
         if(!data)
