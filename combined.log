@@ -3132,3 +3132,5 @@
 {"level":"info","message":"Express Server gestartet -> PORT: 3000"}
 {"level":"debug","message":"Database.init()"}
 {"level":"info","message":"Express Server gestartet -> PORT: 3000"}
+{"level":"debug","message":"Database.init()"}
+{"level":"info","message":"Express Server gestartet -> PORT: 3000"}
