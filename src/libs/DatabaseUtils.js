@@ -290,7 +290,6 @@ class DatabaseUtils {
         );
 
         logger.debug(data.rows)
-        if (data.rowCount == 0) return false;
 
 
         const results = [];

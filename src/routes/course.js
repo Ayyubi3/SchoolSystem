@@ -1,7 +1,8 @@
 const path = require("path")
 const { DatabaseUtils } = require("../libs/DatabaseUtils")
 
-const { marked } = require("marked")
+const { marked } = require("marked");
+const { ADDRGETNETWORKPARAMS } = require("dns");
 
 marked.use({
     breaks: true,
@@ -12,6 +13,8 @@ marked.use({
 
 var express = require('express'),
     courserouter = express.Router();
+
+
 
 courserouter
 
@@ -32,17 +35,20 @@ courserouter
 
         course.code = marked.parse(course.html_markdown_code)
 
-        const userID = await req.user["id"]
+        let user = await DatabaseUtils.getUserByID(await req.user["id"])
+
 
         let isCreator = false
-        if (userID == course.creator_id) {
+        let isMember = false
+        if (user.id == course.creator_id) {
             isCreator = true
             isMember = true
         }
 
         if (!isMember) {
 
-            let courses = await DatabaseUtils.getUserCourses(userID)
+            let courses = await DatabaseUtils.getUserCourses(user.id)
+            console.log(courses)
 
             if (!course) logger.error("Couldnt get courses")
 
@@ -52,7 +58,18 @@ courserouter
 
         const filepath = path.join(__dirname, "..", "..", "public", "course", "index.ejs")
 
-        res.render(filepath, { name: await req.user["email"], isMember, isCreator, course, message: req.flash("main") })
+        const style = require("fs").readFileSync(path.join(__dirname, "..", "..", "public", "course", "style.css"))
+
+        res.render(filepath, {
+            user,
+            course,
+
+            isMember, isCreator,
+
+            
+            style,
+            message: req.flash("main")
+        })
 
 
     })
@@ -74,9 +91,9 @@ courserouter
         const filepath = path.join(__dirname, "..", "..", "public", "editcourse", "index.ejs")
 
 
-       const url = "/course/" + course.id
+        const url = "/course/" + course.id
 
-        res.render( filepath, { url, course, message: req.flash("main") })
+        res.render(filepath, { url, course, message: req.flash("main") })
 
 
     })
@@ -107,8 +124,7 @@ courserouter
 
         const data = await DatabaseUtils.updateCourse(user_ID, req.params.id, req.body.speaker, req.body.html_markdown_code)
 
-        if(!data)
-        {
+        if (!data) {
             logger.error("User " + user_ID + " couldnt update course " + req.params.id)
             req.flash("main", "Could not update " + req.params.id)
             res.send("Cant update this course!")
@@ -126,7 +142,7 @@ courserouter
         const course = await DatabaseUtils.getCourseByID(req.params.id)
 
         if (!course) {
-            res.status(500).json({error: "Course doesnt exist"})
+            res.status(500).json({ error: "Course doesnt exist" })
         }
 
         const userID = await req.user["id"]

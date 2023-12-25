@@ -1,0 +1,2 @@
+{"code":"42703","file":"parse_relation.c","length":113,"level":"error","line":"3718","name":"error","position":"51","routine":"errorMissingColumn","severity":"FEHLER"}
+{"code":"42601","file":"scan.l","length":86,"level":"error","line":"1245","name":"error","position":"51","routine":"scanner_yyerror","severity":"FEHLER"}

@@ -1,50 +1,128 @@
-const { Server } = require("socket.io");
+const { DatabaseUtils } = require("../libs/DatabaseUtils")
 
 
-const io = new Server(process.env.SOCKETPORT, {
+const io = require("socket.io")(process.env.SOCKETPORT, {
+
   cors: {
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"],
-    allowedHeaders: ["my-custom-header"],
+    origin: "http://localhost:3000 ",
     credentials: true
   }
+
 })
 
-const users = {}
+console.log()
 
-const {SessionInstance} = require("../index")
+const { SessionInstance } = require("../index")
+const { passport } = require("./PassportUtils")
 
-io.engine.use(SessionInstance)
+const wrap = middleware => (socket, next) => middleware(socket.request, {}, next);
 
-io.on('connection', async socket => {
-
-  const user = await socket.request.session.passport.user
-
-  socket.on('new-user', name => {
-    users[socket.id] = name
-    socket.broadcast.emit('user-connected', name)
-  })
+// FIXME could cause problems (multiple initializing)
+io.use(wrap(SessionInstance));
+io.use(wrap(passport.initialize()));
+io.use(wrap(passport.session()));
 
 
-  socket.on("join-room", room => {
+io.use((socket, next) => {
+  if (socket.request.user) {
+    next();
+  } else {
+    
+    next(new Error('unauthorized'))
+  }
+});
+
+
+
+io.on('connection', socket => {
+
+  socket.on("join-room", async (room) => {
+
+
+    console.log(room)
+    const user = await socket.request.user
+
+    const userCourse = await DatabaseUtils.getUserCourses(user.id)
+    console.log(userCourse)
+
+
+    const valid = userCourse.some(element => {
+      return element.id == room
+    })
+
+    console.log(valid)
+
+
+    if(!valid)
+    {
+      return //FIXME add error checking
+    }
+    
+    console.log("JOINED")
     socket.join(room)
+
   })
 
 
-  socket.on('send-chat-message', ({ name, room, message }) => {
+  socket.on('send-chat-message', async ({ room, message }) => {
 
+
+    const senderRaw = await socket.request.user
+    const sender = {
+      firstname: senderRaw.firstname,
+      lastname: senderRaw.lastname,
+      id: senderRaw.id
+    }
     
     socket.to(room).emit("chat-message",
-      {
-        message,
-        name
-      }
+    {
+      message,
+      sender
+    }
+
     )
 
 
+  
+  
   })
+
+
+
+
+
+
+  /*
+  socket.on('send-chat-message', async ({ email, id, room, message }) => {
+
+  
+    const userID = await socket.request.user["id"]
+    
+  
+    const course = await DatabaseUtils.getUserCourses(userID)
+  
+    const isInCourse = course.some(element => element.id == room)
+  
+    if(!isInCourse)
+    {
+      console.log("Not allowed to send messages")
+      return
+    }
+  
+    socket.to(room).emit("chat-message",
+      {
+        message,
+        email,
+        id
+      }
+    )
+  
+  
+  })
+  */
+
 })
 
 
 
-module.exports = {io}
+module.exports = { io }
