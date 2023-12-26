@@ -39,18 +39,18 @@ io.on('connection', socket => {
   socket.on("join-room", async (room) => {
 
 
-    console.log(room)
+    
     const user = await socket.request.user
+    logger.info("user " + user.email + " tries to join room " + room)
 
+    
     const userCourse = await DatabaseUtils.getUserCourses(user.id)
-    console.log(userCourse)
 
 
     const valid = userCourse.some(element => {
       return element.id == room
     })
 
-    console.log(valid)
 
 
     if(!valid)
@@ -58,7 +58,7 @@ io.on('connection', socket => {
       return //FIXME add error checking
     }
     
-    console.log("JOINED")
+    logger.info("JOINED")
     socket.join(room)
 
   })
@@ -73,6 +73,8 @@ io.on('connection', socket => {
       lastname: senderRaw.lastname,
       id: senderRaw.id
     }
+
+    await DatabaseUtils.createMessage(message, sender.id, room)
     
     socket.to(room).emit("chat-message",
     {

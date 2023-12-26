@@ -9,7 +9,7 @@ class Database {
     static pool = null
 
     static async init() {
-        logger.debug("Database.init()")
+        logger.info("Database.init()")
 
 
         try {
@@ -55,7 +55,10 @@ class DatabaseUtils {
 
     //User
 
-
+    /**
+     * return user object back
+     * return false -> error
+     */
     static async createUser(firstname, lastname, email, password, id) {
         logger.info("Create user: ", firstname, lastname, email, password, id)
 
@@ -106,6 +109,8 @@ class DatabaseUtils {
         }
     };
 
+
+
     static async emailExists(email) {
         const data = await Database.exec(`SELECT * FROM "user" WHERE email=$1`, [
             email,
@@ -114,6 +119,8 @@ class DatabaseUtils {
         if (data.rowCount == 0) return false;
         return true
     };
+
+
 
 
     static async getUserByEmail(email) {
@@ -154,7 +161,10 @@ class DatabaseUtils {
     //Course
 
 
-
+    /**
+     * return course object back
+     * return false -> error
+     */
     static async createCourse(name, html_markdown_code, creator_id, id) {
 
 
@@ -215,7 +225,11 @@ class DatabaseUtils {
     };
 
 
-    
+
+    /**
+     * return true
+     * return false -> error
+     */
     static async updateCourse(creator_id, course_id, name, html_markdown_code) {
 
         if(!name && !html_markdown_code)
@@ -282,6 +296,11 @@ class DatabaseUtils {
         return true;
     }
 
+    /**
+     * return [courses]
+     * return  [] -> user has no courses
+     * return false error
+     */
     static async getUserCourses(userID) {
 
 
@@ -300,6 +319,7 @@ class DatabaseUtils {
                 results.push(await DatabaseUtils.getCourseByID(courseId.course_id));
             } catch (error) {
                 logger.error(`Error fetching data for course ID ${courseId}:`, error);
+                return false
             }
         }
 
@@ -307,6 +327,59 @@ class DatabaseUtils {
         return results;
 
     }
+
+
+    /**
+     * return false -> error
+     * return message object
+     */
+    static async createMessage(content, userID, courseID) {
+
+
+        logger.info("Create message: ", content, userID, courseID)
+
+        if (!content || !userID || !courseID) {
+            logger.error("input is missing")
+            return false
+
+        }
+
+        try {
+            const data = await Database.exec(
+                `INSERT INTO "message" (content, user_id, course_id) VALUES ($1, $2, $3) RETURNING *`,
+                [content, userID, courseID]
+            );
+            logger.debug(data.rows[0])
+            return data.rows[0]
+
+        } catch (error) {
+            logger.error(error)
+            return false
+        }
+
+
+    }
+
+
+
+    /**
+     * 
+     */
+    static async getMessagesFromCourse(course_id) {
+
+
+
+        const data = await Database.exec(
+            `SELECT * FROM message WHERE course_id = ` + course_id
+        );
+
+
+        if (data.rowCount == 0) return [];
+        logger.debug("getMessagesFromCourse(" + course_id  + ") = " + data.rows[0])
+
+        return data.rows;
+    }
+
 
 
 

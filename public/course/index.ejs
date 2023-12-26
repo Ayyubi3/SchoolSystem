@@ -195,7 +195,7 @@
         let senderID = <%= user.id %>
 
         let side = "left"
-        if(senderID == data.sender.id) side = "right"
+        if (senderID == data.sender.id) side = "right"
 
         appendMessage(data.sender.firstname, "", side, data.message)
 
@@ -235,6 +235,22 @@
 
 
   </section>
+
+
+
+  <script>
+    <% outputMessages.forEach((element) => { %>
+
+      appendMessage(
+        "<%= element.message.user_id %>",
+        "",
+        "<%= element.side %>",
+        "<%= element.message.content %>",
+
+        )
+
+    <% }) %>
+  </script>
 
 </body>
 

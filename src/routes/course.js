@@ -2,7 +2,6 @@ const path = require("path")
 const { DatabaseUtils } = require("../libs/DatabaseUtils")
 
 const { marked } = require("marked");
-const { ADDRGETNETWORKPARAMS } = require("dns");
 
 marked.use({
     breaks: true,
@@ -13,8 +12,6 @@ marked.use({
 
 var express = require('express'),
     courserouter = express.Router();
-
-
 
 courserouter
 
@@ -29,11 +26,11 @@ courserouter
             return
         }
 
-
-
         // FIXME: No sanitiziation here | Markdown highlighter npm 
 
         course.code = marked.parse(course.html_markdown_code)
+
+
 
         let user = await DatabaseUtils.getUserByID(await req.user["id"])
 
@@ -48,31 +45,55 @@ courserouter
         if (!isMember) {
 
             let courses = await DatabaseUtils.getUserCourses(user.id)
-            console.log(courses)
 
-            if (!course) logger.error("Couldnt get courses")
+            if (!course) { logger.error("Couldnt get courses"); return }
 
             isMember = courses.some(element => element.id == course.id)
 
         }
 
+
+
+
+
+
+        const CourseMessages = await DatabaseUtils.getMessagesFromCourse(req.params.id)
+
+
+
+        let outputMessages = []
+        CourseMessages.forEach(async element => {
+
+            outputMessages.push(
+                {
+
+                    message: element,
+                    side: element.user_id == user.id ? "right" : "left"
+                }
+            )
+
+
+        });
+
+        console.log(outputMessages)
+
+
         const filepath = path.join(__dirname, "..", "..", "public", "course", "index.ejs")
-
         const style = require("fs").readFileSync(path.join(__dirname, "..", "..", "public", "course", "style.css"))
-
         res.render(filepath, {
             user,
             course,
 
             isMember, isCreator,
 
-            
+            outputMessages,
+
             style,
             message: req.flash("main")
         })
-
-
     })
+
+
 
     .get('/course/:id/edit', async (req, res) => {
 
@@ -87,6 +108,10 @@ courserouter
 
         let canEdit = course.creator_id == userID
 
+        if (!canEdit) {
+            res.send("Dont have the rights to edit")
+            return
+        }
 
         const filepath = path.join(__dirname, "..", "..", "public", "editcourse", "index.ejs")
 
@@ -97,6 +122,7 @@ courserouter
 
 
     })
+
 
 
     .post('/course/:id', async (req, res) => {
@@ -118,6 +144,7 @@ courserouter
     })
 
 
+
     .put('/course/:id', async (req, res) => {
 
         const user_ID = await req.user["id"]
@@ -135,6 +162,7 @@ courserouter
 
         // FIXME Cant redirect user to update new data 
     })
+
 
 
     .delete('/course/:id', async (req, res) => {
