@@ -215,7 +215,7 @@ class DatabaseUtils {
         }
 
         if (html_markdown_code) {
-            cmd += ` html_markdown_code = '` + html_markdown_code + `' `
+            cmd += ` html_markdown_code = $$` + html_markdown_code + `$$ `
         }
 
         cmd += `WHERE id = ` + course_id + ` AND creator_id = ` + creator_id

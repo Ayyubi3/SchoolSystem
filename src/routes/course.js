@@ -139,6 +139,7 @@ courserouter
             return
         }
 
+        console.log("res")
 
         res.redirect("/course/" + req.params.id)
 
@@ -150,7 +151,10 @@ courserouter
 
         const user_ID = await req.user["id"]
 
-        const data = await DatabaseUtils.updateCourse(user_ID, req.params.id, req.body.speaker, req.body.html_markdown_code)
+        console.log(req.body)
+
+        const data = await DatabaseUtils.updateCourse(user_ID, req.params.id, req.body.speaker, req.body.html_markdown_code.replace(/`/g, '\\`'))
+
 
         if (!data) {
             logger.error("User " + user_ID + " couldnt update course " + req.params.id)

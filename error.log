@@ -35,3 +35,15 @@
 {"code":"22P02","file":"numutils.c","length":132,"level":"error","line":"620","name":"error","position":"64","routine":"pg_strtoint32_safe","severity":"FEHLER"}
 {"level":"error"}
 {"level":"error"}
+{"code":"23505","constraint":"user_course_pkey","detail":"Schlüssel »(user_id, course_id)=(115758, 9872)« existiert bereits.","file":"nbtinsert.c","length":247,"level":"error","line":"673","name":"error","routine":"_bt_check_unique","schema":"public","severity":"FEHLER","table":"user_course"}
+{"code":"23505","constraint":"user_course_pkey","detail":"Schlüssel »(user_id, course_id)=(115758, 9872)« existiert bereits.","file":"nbtinsert.c","length":247,"level":"error","line":"673","name":"error","routine":"_bt_check_unique","schema":"public","severity":"FEHLER","table":"user_course"}
+{"level":"error","message":"User 115758 couldnt join course 9872"}
+{"code":"23505","constraint":"user_course_pkey","detail":"Schlüssel »(user_id, course_id)=(115758, 9872)« existiert bereits.","file":"nbtinsert.c","length":247,"level":"error","line":"673","name":"error","routine":"_bt_check_unique","schema":"public","severity":"FEHLER","table":"user_course"}
+{"code":"23505","constraint":"user_course_pkey","detail":"Schlüssel »(user_id, course_id)=(115758, 9872)« existiert bereits.","file":"nbtinsert.c","length":247,"level":"error","line":"673","name":"error","routine":"_bt_check_unique","schema":"public","severity":"FEHLER","table":"user_course"}
+{"level":"error","message":"User 115758 couldnt join course 9872"}
+{"code":"42601","file":"scan.l","length":90,"level":"error","line":"1245","name":"error","position":"37","routine":"scanner_yyerror","severity":"FEHLER"}
+{"level":"error","message":"User 115758 couldnt update course 9872"}
+{"code":"42601","file":"scan.l","length":92,"level":"error","line":"1245","name":"error","position":"697","routine":"scanner_yyerror","severity":"FEHLER"}
+{"level":"error","message":"User 115758 couldnt update course 9872"}
+{"code":"42601","file":"scan.l","length":92,"level":"error","line":"1245","name":"error","position":"697","routine":"scanner_yyerror","severity":"FEHLER"}
+{"level":"error","message":"User 115758 couldnt update course 9872"}

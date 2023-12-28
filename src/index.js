@@ -104,6 +104,8 @@ const { courserouter } = require("./routes/course")
 app.use(courserouter)
 const { profilerouter } = require("./routes/profile")
 app.use(profilerouter)
+const { filesrouter } = require("./routes/files")
+app.use(filesrouter)
 
 
 

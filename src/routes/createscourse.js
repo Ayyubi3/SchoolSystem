@@ -23,7 +23,10 @@ createcourserouter
 
         req.body.creator_id = await req.user["id"]
 
-        const course = await DatabaseUtils.createCourse(req.body.name, req.body.html_markdown_code, req.body.creator_id)
+
+
+        const course = await DatabaseUtils.createCourse(req.body.name, req.body.html_markdown_code.replace(/`/g, '\\`'), req.body.creator_id)
+        
         if (!course) {
             logger.error(req.body + " couldnt be created")
             req.flash("main", "Could not create course")

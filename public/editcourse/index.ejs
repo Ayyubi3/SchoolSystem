@@ -17,7 +17,7 @@
       min-height: 100vh;
     }
 
-    form {
+    .cont {
       background-color: #fff;
       border-radius: 8px;
       padding: 20px;
@@ -68,35 +68,34 @@
 
 
 
+<div class="cont">
 
-  <form action="">
-
-
-    <h1>Course Information</h1>
-
-    <label for="speaker">List of Speakers (comma-separated):</label>
-    <input type="text" id="speakers" required>
-
-    <label for="html_markdown_code">Markdown Code:</label>
-    <input type="hidden" id="codeInput">
-    <script>
-      var simplemde = new SimpleMDE({
-        element: document.getElementById("codeInput")
-      });
+  <h1>Course Information</h1>
+  
+  <label for="speaker">List of Speakers (comma-separated):</label>
+  <input type="text" id="speakers" required>
+  
+  <label for="html_markdown_code">Markdown Code:</label>
+  <input type="hidden" id="codeInput">
+  <script>
+    var simplemde = new SimpleMDE({
+      element: document.getElementById("codeInput")
+    });
     </script>
 
-    <button id="btn">btn</button>
-
-  </form>
+<button id="btn">btn</button>
+</div>
 
 
   <script>
-    document.getElementById('btn').addEventListener("click", () => {
 
+    document.getElementById('btn').addEventListener("click", () => {
+      
       const body = {
-        speaker: 'document.getElementById("speakers").value',
-        html_markdown_code: 'document.getElementById("codeInput").value'
+        speaker: document.getElementById("speakers").value,
+        html_markdown_code: simplemde.value()
       }
+      console.log(body)
       fetch("<%= url %>", {
         method: 'PUT',
         headers: {
@@ -104,7 +103,12 @@
         },
         body: JSON.stringify(body)
       })
+      
+      .catch(error => console.error('Error:', error));
     })
+    
+    simplemde.value(`<%= course.html_markdown_code %>`)
+
   </script>
 </body>
 
