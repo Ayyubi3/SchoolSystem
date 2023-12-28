@@ -33,3 +33,5 @@
 {"code":"22P02","file":"numutils.c","length":225,"level":"error","line":"620","name":"error","routine":"pg_strtoint32_safe","severity":"FEHLER","where":"unbenanntes Portal Parameter $2 = '...'"}
 {"code":"22P02","file":"numutils.c","length":132,"level":"error","line":"620","name":"error","position":"64","routine":"pg_strtoint32_safe","severity":"FEHLER"}
 {"code":"22P02","file":"numutils.c","length":132,"level":"error","line":"620","name":"error","position":"64","routine":"pg_strtoint32_safe","severity":"FEHLER"}
+{"level":"error"}
+{"level":"error"}

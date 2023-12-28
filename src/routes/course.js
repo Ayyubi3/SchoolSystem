@@ -5,7 +5,8 @@ const { marked } = require("marked");
 
 marked.use({
     breaks: true,
-    gfm: true
+    gfm: true,
+    pedantic: true
 })
 
 
