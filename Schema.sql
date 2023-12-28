@@ -34,6 +34,41 @@ ALTER TABLE "session" ADD CONSTRAINT "session_pkey" PRIMARY KEY ("sid") NOT DEFE
 CREATE INDEX "IDX_session_expire" ON "session" ("expire");
 
 
+CREATE OR REPLACE FUNCTION set_idu()
+    RETURNS TRIGGER AS $$
+BEGIN
+    NEW.id := floor(random() * 900000 + 100000)::integer; -- Generates a random 6-digit number
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
 
-DELETE FROM "session"; DELETE FROM "user_course"; DELETE FROM "course";  DELETE FROM "user";
+
+CREATE TRIGGER set_id_trigger
+    BEFORE INSERT ON "user"
+    FOR EACH ROW
+    EXECUTE FUNCTION set_idu();
+
+
+
+
+
+    CREATE OR REPLACE FUNCTION set_idc()
+    RETURNS TRIGGER AS $$
+BEGIN
+    NEW.id := floor(random() * 9000 + 1000)::integer; -- Generates a random 6-digit number
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+CREATE TRIGGER set_id_trigger
+    BEFORE INSERT ON "course"
+    FOR EACH ROW
+    EXECUTE FUNCTION set_idc();
+
+
+
+
+-- DELETE FROM "session"; DELETE FROM "user_course"; DELETE FROM "course";  DELETE FROM "user";

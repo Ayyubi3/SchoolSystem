@@ -1,2 +1,35 @@
 {"code":"42703","file":"parse_relation.c","length":113,"level":"error","line":"3718","name":"error","position":"51","routine":"errorMissingColumn","severity":"FEHLER"}
 {"code":"42601","file":"scan.l","length":86,"level":"error","line":"1245","name":"error","position":"51","routine":"scanner_yyerror","severity":"FEHLER"}
+{"code":"42703","file":"parse_relation.c","length":113,"level":"error","line":"3718","name":"error","position":"33","routine":"errorMissingColumn","severity":"FEHLER"}
+{"code":"42703","file":"parse_relation.c","length":113,"level":"error","line":"3718","name":"error","position":"33","routine":"errorMissingColumn","severity":"FEHLER"}
+{"code":"42703","file":"parse_relation.c","length":113,"level":"error","line":"3718","name":"error","position":"33","routine":"errorMissingColumn","severity":"FEHLER"}
+{"code":"42703","file":"parse_relation.c","length":113,"level":"error","line":"3718","name":"error","position":"33","routine":"errorMissingColumn","severity":"FEHLER"}
+{"code":"42703","file":"parse_relation.c","length":113,"level":"error","line":"3718","name":"error","position":"33","routine":"errorMissingColumn","severity":"FEHLER"}
+{"code":"42703","file":"parse_relation.c","length":113,"level":"error","line":"3718","name":"error","position":"33","routine":"errorMissingColumn","severity":"FEHLER"}
+{"code":"42703","file":"parse_relation.c","length":113,"level":"error","line":"3718","name":"error","position":"33","routine":"errorMissingColumn","severity":"FEHLER"}
+{"code":"42703","file":"parse_relation.c","length":113,"level":"error","line":"3718","name":"error","position":"33","routine":"errorMissingColumn","severity":"FEHLER"}
+{"code":"42703","file":"parse_relation.c","length":113,"level":"error","line":"3718","name":"error","position":"33","routine":"errorMissingColumn","severity":"FEHLER"}
+{"code":"42703","file":"parse_relation.c","length":113,"level":"error","line":"3718","name":"error","position":"33","routine":"errorMissingColumn","severity":"FEHLER"}
+{"code":"42703","file":"parse_relation.c","length":113,"level":"error","line":"3718","name":"error","position":"33","routine":"errorMissingColumn","severity":"FEHLER"}
+{"level":"error","message":"[object Object] couldnt be created"}
+{"level":"error","message":"[object Object] couldnt be created"}
+{"level":"error","message":"[object Object] couldnt be created"}
+{"level":"error","message":"[object Object] couldnt be created"}
+{"code":"23502","column":"course_id","detail":"Fehlgeschlagene Zeile enthält (115758, null).","file":"execMain.c","length":235,"level":"error","line":"2009","name":"error","routine":"ExecConstraints","schema":"public","severity":"FEHLER","table":"user_course"}
+{"code":"23502","column":"course_id","detail":"Fehlgeschlagene Zeile enthält (115758, null).","file":"execMain.c","length":235,"level":"error","line":"2009","name":"error","routine":"ExecConstraints","schema":"public","severity":"FEHLER","table":"user_course"}
+{"code":"42703","file":"parse_relation.c","length":113,"level":"error","line":"3718","name":"error","position":"33","routine":"errorMissingColumn","severity":"FEHLER"}
+{"code":"42703","file":"parse_relation.c","length":113,"level":"error","line":"3718","name":"error","position":"33","routine":"errorMissingColumn","severity":"FEHLER"}
+{"level":"error","message":"input is missing"}
+{"code":"42703","file":"parse_relation.c","length":113,"level":"error","line":"3718","name":"error","position":"33","routine":"errorMissingColumn","severity":"FEHLER"}
+{"code":"42703","file":"parse_relation.c","length":113,"level":"error","line":"3718","name":"error","position":"33","routine":"errorMissingColumn","severity":"FEHLER"}
+{"level":"error","message":"input is missing"}
+{"code":"42703","file":"parse_relation.c","length":113,"level":"error","line":"3718","name":"error","position":"33","routine":"errorMissingColumn","severity":"FEHLER"}
+{"code":"42703","file":"parse_relation.c","length":113,"level":"error","line":"3718","name":"error","position":"33","routine":"errorMissingColumn","severity":"FEHLER"}
+{"level":"error"}
+{"level":"error","message":"input is missing"}
+{"level":"error","message":"input is missing"}
+{"level":"error","message":"input is missing"}
+{"code":"22P02","file":"numutils.c","length":225,"level":"error","line":"620","name":"error","routine":"pg_strtoint32_safe","severity":"FEHLER","where":"unbenanntes Portal Parameter $2 = '...'"}
+{"code":"22P02","file":"numutils.c","length":225,"level":"error","line":"620","name":"error","routine":"pg_strtoint32_safe","severity":"FEHLER","where":"unbenanntes Portal Parameter $2 = '...'"}
+{"code":"22P02","file":"numutils.c","length":132,"level":"error","line":"620","name":"error","position":"64","routine":"pg_strtoint32_safe","severity":"FEHLER"}
+{"code":"22P02","file":"numutils.c","length":132,"level":"error","line":"620","name":"error","position":"64","routine":"pg_strtoint32_safe","severity":"FEHLER"}

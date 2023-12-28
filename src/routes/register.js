@@ -20,7 +20,7 @@ registerrouter
 
     .post('/register', passport.authenticate("local-signup", { 
         successRedirect: "/login",
-        failureRedirect: "/register"
+        failureRedirect: "/"
      }),
         (req, res, next) => {
         }

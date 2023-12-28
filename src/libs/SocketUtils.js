@@ -10,7 +10,6 @@ const io = require("socket.io")(process.env.SOCKETPORT, {
 
 })
 
-console.log()
 
 const { SessionInstance } = require("../index")
 const { passport } = require("./PassportUtils")
@@ -45,6 +44,8 @@ io.on('connection', socket => {
 
     
     const userCourse = await DatabaseUtils.getUserCourses(user.id)
+
+    console.log(userCourse)
 
 
     const valid = userCourse.some(element => {
@@ -94,35 +95,7 @@ io.on('connection', socket => {
 
 
 
-  /*
-  socket.on('send-chat-message', async ({ email, id, room, message }) => {
-
   
-    const userID = await socket.request.user["id"]
-    
-  
-    const course = await DatabaseUtils.getUserCourses(userID)
-  
-    const isInCourse = course.some(element => element.id == room)
-  
-    if(!isInCourse)
-    {
-      console.log("Not allowed to send messages")
-      return
-    }
-  
-    socket.to(room).emit("chat-message",
-      {
-        message,
-        email,
-        id
-      }
-    )
-  
-  
-  })
-  */
-
 })
 
 

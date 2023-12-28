@@ -35,6 +35,7 @@ courserouter
         let user = await DatabaseUtils.getUserByID(await req.user["id"])
 
 
+
         let isCreator = false
         let isMember = false
         if (user.id == course.creator_id) {
@@ -43,6 +44,7 @@ courserouter
         }
 
         if (!isMember) {
+
 
             let courses = await DatabaseUtils.getUserCourses(user.id)
 
@@ -75,7 +77,6 @@ courserouter
 
         });
 
-        console.log(outputMessages)
 
 
         const filepath = path.join(__dirname, "..", "..", "public", "course", "index.ejs")
