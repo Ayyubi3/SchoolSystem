@@ -1,12 +1,10 @@
 const path = require("path")
 const { DatabaseUtils } = require("../libs/DatabaseUtils")
 
-const { marked } = require("marked");
-
-marked.use({
-    breaks: true,
-    gfm: true,
-    pedantic: true
+const markdownit = require('markdown-it')
+const md = markdownit({
+    linkify: true,
+    typographer: true
 })
 
 
@@ -29,7 +27,7 @@ courserouter
 
         // FIXME: No sanitiziation here | Markdown highlighter npm 
 
-        course.code = marked.parse(course.html_markdown_code)
+        course.code = md.render(course.html_markdown_code)
 
 
 
