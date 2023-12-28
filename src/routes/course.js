@@ -30,6 +30,7 @@ courserouter
         course.code = md.render(course.html_markdown_code)
 
 
+        console.log(course.code)
 
         let user = await DatabaseUtils.getUserByID(await req.user["id"])
 
