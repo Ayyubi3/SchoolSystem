@@ -176,7 +176,7 @@ class DatabaseUtils {
             console.error(error)
             return false
         }
-        
+
         return data.rows[0]
 
 
@@ -248,7 +248,7 @@ class DatabaseUtils {
             logger.error(error)
             return false
         }
-        if(data.rowCount == 0) return false
+        if (data.rowCount == 0) return false
 
         logger.info("getCourseByID(" + id + ") = " + JSON.stringify(data.rows[0]))
         return data.rows[0]
@@ -260,7 +260,7 @@ class DatabaseUtils {
 
     static async userJoinCourse(course_id, user_id) {
 
-        logger.info("User join course: "+ course_id+ user_id)
+        logger.info("User join course: " + course_id + user_id)
 
         if (!course_id || !user_id) {
             logger.error("input is missing")
@@ -358,6 +358,20 @@ class DatabaseUtils {
         const [data, error] = await Database.exec(
             `SELECT * FROM message WHERE course_id = ` + course_id
         );
+
+
+        for (let i = 0; i < data.rowCount; i++) {
+
+             let user = await DatabaseUtils.getUserByID(data.rows[i].user_id)
+
+             if(!user)
+             {
+                user = "user doesnt exist"
+             }
+
+             data.rows[i].sender = user.firstname + " " + user.lastname
+        }
+
 
 
         if (data.rowCount == 0) return [];

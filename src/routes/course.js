@@ -79,6 +79,8 @@ courserouter
 
 
 
+        console.log("outputMessages")
+        console.log(outputMessages)
         const filepath = path.join(__dirname, "..", "..", "public", "course", "index.ejs")
         const style = require("fs").readFileSync(path.join(__dirname, "..", "..", "public", "course", "style.css"))
         res.render(filepath, {
