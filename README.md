@@ -5,22 +5,22 @@ School System is a web application designed to empower teachers to provide acces
 ## Features
 
 - **User Registration and Authentication:**
-  - Teachers can register for an account.
-  - Secure authentication system for managing teacher accounts.
-  - Save session in DB
+  - Secure login and sign up for teachers and students through passportjs. 
+  - Profile page with easy way to delete account.
+  - Session data and user data is safely stored in PostgresSQL database.
 
 - **Create and Design Courses:**
-  - Teachers can create courses.
-  - Design courses using HTML to provide a customizable learning experience.
+  - Create and design courses with Markdown.
+  - Add links to other ressources.
+  - Edit or delete course if user is the creator.
+  - join or leave course if you are a normal user so the course is listed in /dashboard.
+  - (in the future) add links to custom files saved on the server.
+ 
 
-## Planned Features
-  - Edit profile page
-  - Edit course page
-  - Send error messages to client through express-flash
-  - Mock course for creating courses
-  - Add File sharing
+## Planned Features 
+- File sharing
 
-
+- 
 ## Getting Started
 
 ### Prerequisites
@@ -28,6 +28,13 @@ School System is a web application designed to empower teachers to provide acces
 - Node.js and npm: [Download and install Node.js](https://nodejs.org/).
 - PostgreSQL: [Download and install PostgreSQL](https://www.postgresql.org/).
 
+### Used technologies
+- https://www.npmjs.com/package/express
+- https://www.npmjs.com/package/passport
+- https://www.npmjs.com/package/ejs
+- https://www.npmjs.com/package/socket.io
+- https://www.npmjs.com/package/pg
+  
 ### Installation
 
 1. Clone the repository:
