@@ -68,7 +68,7 @@ app.get('/', async (req, res) => {
 
 	let name = ""
 	if (req.user) {
-		const user = await DatabaseUtils.getUserByID(await req.user["id"])
+		const user = await DatabaseUtils.getUserByID_o(await req.user["id"])
 		name = ", " + user.firstname + " " + user.lastname
 	}
 	res.render(require("path").join("..", "public", "index", "index.ejs"), { user: name, message: req.flash("main") })

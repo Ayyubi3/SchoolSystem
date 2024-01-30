@@ -78,11 +78,7 @@ class DatabaseUtils {
             [firstname, lastname, email, hash]
         );
 
-        if (error) {
-            error = "Not allowed to create user."
-            data = false
-            return [data, error]
-        }
+        if (error) { return [false, "Not allowed to create user."] }
 
         if (data.rows[0]) { data = data.rows[0] }
 
@@ -119,7 +115,7 @@ class DatabaseUtils {
 
 
 
-    static async getUserByID(id) {
+    static async getUserByID_o(id) {
 
         let [data, error] = await Database.exec(
             `SELECT * FROM "user" WHERE id=$1`,
@@ -161,15 +157,18 @@ class DatabaseUtils {
 
 
 
-        let res = await Database.exec(
+        let [data, error] = await Database.exec(
             `INSERT INTO "course"(name, html_markdown_code, creator_id) 
             VALUES ($1, $2, $3) RETURNING *`,
             [name, html_markdown_code, creator_id]
         );
 
+        if (error) { return [false, "Not allowed to create course."] }
 
-        if (!res.isError) res.Result = res.Result.rows[0]
-        return res
+        if (data.rows[0]) { data = data.rows[0] }
+
+        return [data, false]
+
 
 
     }
@@ -220,16 +219,15 @@ class DatabaseUtils {
 
 
 
-    static async getCourseByID(id) {
+    static async getCourseByID_o(id) {
 
-        let res = await Database.exec(
+        let [data, error] = await Database.exec(
             `SELECT * FROM "course" WHERE id=$1`,
             [id]
         );
 
-        if (!res.isError) res.Result = res.Result.rows[0]
-        return res
-
+        if (error) { data = false }
+        return data.rows[0]
 
     }
 
@@ -240,31 +238,30 @@ class DatabaseUtils {
 
         if (!course_id || !user_id) {
             logger.error("input is missing")
-            return new Result(true, "Input is missing", false)
+            return false
         }
 
-        const res = await Database.exec(
+        const [data, error] = await Database.exec(
             `INSERT INTO user_course (user_id, course_id) 
             VALUES ($1, $2)`,
             [user_id, course_id]
         );
 
-        return res
+        return !error
 
     }
-    static async getUserCourses(userID) {
+    static async getUserCourses(user_id) {
 
 
-        const res = await Database.exec(
-            `SELECT course_id, name 
+        let [data, error] = await Database.exec(
+            `SELECT course.id, name 
             FROM user_course, course 
-            WHERE user_course.course_id = course.id;`,
-            [user_id, course_id]
+            WHERE user_course.user_id = $1`,
+            [user_id]
         );
 
-
-        res.Result = res.Result.rows
-        return res
+        data = data.rows || []
+        return [data, error]
 
 
     }
@@ -297,14 +294,17 @@ class DatabaseUtils {
 
 
 
-        const res = await Database.exec(
+        const [data, error] = await Database.exec(
             `SELECT * FROM message, "user" 
             WHERE message.user_id = "user".id
             AND message.course_id = $1`,
             [course_id]
         );
 
-        return res
+        if (error){
+            return [false, "Couldnt get messages."]
+        }
+        return [data.rows || [], false]
 
     }
 

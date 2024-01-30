@@ -81,7 +81,7 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser(async (user, done) => {
 
   if (!user) { done(null, false) }
-  let out = await DatabaseUtils.getUserByID(user.id);
+  let out = await DatabaseUtils.getUserByID_o(user.id);
   if (!out) { done("Deserializing failed.", false) }
   done(null, out);
 

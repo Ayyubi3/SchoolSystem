@@ -17,11 +17,11 @@ courserouter
     .get('/course/:id', async (req, res) => {
 
 
-        const course = await DatabaseUtils.getCourseByID(req.params.id);
+        const course = await DatabaseUtils.getCourseByID_o(req.params.id);
 
-        if (course == false) {
-            logger.warn("No course with id =" + req.params.id)
-            res.send("No course with this id")
+        if (!course) {
+            req.flash("main", "No course with this id")
+            res.redirect("/dashboard")
             return
         }
 
@@ -29,23 +29,19 @@ courserouter
 
         course.code = md.render(course.html_markdown_code)
 
+        let user = await DatabaseUtils.getUserByID_o(await req.user["id"])
 
-        console.log(course.code)
-
-        let user = await DatabaseUtils.getUserByID(await req.user["id"])
-
-
-
-        let isCreator = false
-        let isMember = false
-        if (user.id == course.creator_id) {
-            isCreator = true
-            isMember = true
+        if (!user) {
+            req.flash("main", "User doesnt exist") 
+            res.redirect("/login") 
         }
 
+
+
+        let isCreator = user.id == course.creator_id
+        let isMember = isCreator
+
         if (!isMember) {
-
-
             let courses = await DatabaseUtils.getUserCourses(user.id)
 
             if (!course) { logger.error("Couldnt get courses"); return }
@@ -59,9 +55,14 @@ courserouter
 
 
 
-        const CourseMessages = await DatabaseUtils.getMessagesFromCourse(req.params.id)
+        const [data, error] = await DatabaseUtils.getMessagesFromCourse(req.params.id)
 
+        if (error) {
+            req.flash("main", error)
+            return
+        }
 
+        let CourseMessages = data
 
         let outputMessages = []
         CourseMessages.forEach(async element => {
@@ -81,6 +82,7 @@ courserouter
 
         console.log("outputMessages")
         console.log(outputMessages)
+
         const filepath = path.join(__dirname, "..", "..", "public", "course", "index.ejs")
         const style = require("fs").readFileSync(path.join(__dirname, "..", "..", "public", "course", "style.css"))
         res.render(filepath, {

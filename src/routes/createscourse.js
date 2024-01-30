@@ -21,19 +21,15 @@ createcourserouter
 
     .post('/createcourse', async (req, res) => {
 
-        req.body.creator_id = await req.user["id"]
-
-
-
-        const course = await DatabaseUtils.createCourse(req.body.name, req.body.html_markdown_code.replace(/`/g, '\\`'), req.body.creator_id)
+        const [data, error] = await DatabaseUtils.createCourse(req.body.name, req.body.html_markdown_code.replace(/`/g, '\\`'), await req.user["id"])
         
-        if (!course) {
-            logger.error(req.body + " couldnt be created")
+        if (error) {
             req.flash("main", "Could not create course")
             res.redirect("/createcourse")
             return
 
         }
+        course = data
         console.log(course)
 
         console.log(await DatabaseUtils.userJoinCourse(course.id, req.body.creator_id))
