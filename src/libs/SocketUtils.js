@@ -26,7 +26,7 @@ io.use((socket, next) => {
   if (socket.request.user) {
     next();
   } else {
-    
+
     next(new Error('unauthorized'))
   }
 });
@@ -38,11 +38,11 @@ io.on('connection', socket => {
   socket.on("join-room", async (room) => {
 
 
-    
+
     const user = await socket.request.user
     logger.info("user " + user.email + " tries to join room " + room)
 
-    
+
     const userCourse = await DatabaseUtils.getUserCourses(user.id)
 
     console.log(userCourse)
@@ -54,11 +54,10 @@ io.on('connection', socket => {
 
 
 
-    if(!valid)
-    {
+    if (!valid) {
       return //FIXME add error checking
     }
-    
+
     logger.info("JOINED")
     socket.join(room)
 
@@ -76,18 +75,18 @@ io.on('connection', socket => {
     }
 
     await DatabaseUtils.createMessage(message, sender.id, room)
-    
+
     socket.to(room).emit("chat-message",
-    {
-      message,
-      sender
-    }
+      {
+        message,
+        sender
+      }
 
     )
 
 
-  
-  
+
+
   })
 
 
@@ -95,7 +94,7 @@ io.on('connection', socket => {
 
 
 
-  
+
 })
 
 

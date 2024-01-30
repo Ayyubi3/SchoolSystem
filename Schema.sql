@@ -22,16 +22,24 @@ CREATE TABLE user_course (
 );
 
 
+CREATE TABLE message (
+  id SERIAL PRIMARY KEY,
+  content TEXT NOT NULL,
+  user_id INTEGER REFERENCES "user"(id) ON DELETE SET NULL ON UPDATE CASCADE,
+  course_id INTEGER REFERENCES "course"(id) ON DELETE SET NULL ON UPDATE CASCADE,
+  "timestamp" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
 CREATE TABLE "session" (
   "sid" varchar NOT NULL COLLATE "default",
   "sess" json NOT NULL,
   "expire" timestamp(6) NOT NULL
 )
 WITH (OIDS=FALSE);
-
 ALTER TABLE "session" ADD CONSTRAINT "session_pkey" PRIMARY KEY ("sid") NOT DEFERRABLE INITIALLY IMMEDIATE;
-
 CREATE INDEX "IDX_session_expire" ON "session" ("expire");
+
 
 
 CREATE OR REPLACE FUNCTION set_idu()
@@ -43,25 +51,21 @@ END;
 $$ LANGUAGE plpgsql;
 
 
+CREATE OR REPLACE FUNCTION set_idc()
+  RETURNS TRIGGER AS $$
+BEGIN
+  NEW.id := floor(random() * 9000 + 1000)::integer; -- Generates a random 6-digit number
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
 
 CREATE TRIGGER set_id_trigger
     BEFORE INSERT ON "user"
     FOR EACH ROW
     EXECUTE FUNCTION set_idu();
-
-
-
-
-
-    CREATE OR REPLACE FUNCTION set_idc()
-    RETURNS TRIGGER AS $$
-BEGIN
-    NEW.id := floor(random() * 9000 + 1000)::integer; -- Generates a random 6-digit number
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-
+    
 
 CREATE TRIGGER set_id_trigger
     BEFORE INSERT ON "course"
@@ -71,4 +75,5 @@ CREATE TRIGGER set_id_trigger
 
 
 
--- DELETE FROM "session"; DELETE FROM "user_course"; DELETE FROM "course";  DELETE FROM "user";
+    
+

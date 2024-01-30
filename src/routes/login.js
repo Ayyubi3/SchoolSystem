@@ -18,14 +18,17 @@ loginrouter
 
 
 
-    .post('/login', passport.authenticate("local-login", {
-        failureRedirect: "/login",
-        failureFlash: true
-    }),
-        (req, res, next) => {
-            res.redirect("/")
-        }
-    )
+    .post('/login', (req, res, next) => {
+        passport.authenticate("local-login", (err, user, info) => {
+            if(err) {
+                req.flash("main", err)
+                return res.redirect("/login")
+            }
+            if(!user) { return res.redirect("/login") }
+
+            req.login(user, () => res.redirect("/"))
+        })(req, res, next)
+    })
 
 
     .post('/logout', (req, res) => {

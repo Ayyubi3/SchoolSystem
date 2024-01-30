@@ -18,13 +18,18 @@ registerrouter
 
     })
 
-    .post('/register', passport.authenticate("local-signup", { 
-        successRedirect: "/login",
-        failureRedirect: "/"
-     }),
-        (req, res, next) => {
-        }
-    )
+    .post('/register', (req, res, next) => {
+        passport.authenticate('local-signup', (err, user, info) => {
+            if(err) {
+                req.flash("main", err)
+                return res.redirect("/register")
+            }
+            if(!user) { return res.redirect("/login") }
+
+            req.login(user, () => res.redirect("/"));
+            
+        })(req, res);
+    });
 
 
 

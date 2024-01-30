@@ -15,11 +15,11 @@ class Database {
         try {
 
             this.pool = new Pool({
-                user: process.env.DBUSER,
-                host: process.env.DBHOST,
-                database: process.env.DBDATABASE,
-                password: process.env.DBPASSWORD,
-                port: process.env.DBPORT,
+                user: "SchoolSystem",
+                host: "localhost",
+                database: "SchoolSystem",
+                password: "SchoolSystem",
+                port: 5432,
                 max: 10,
                 idleTimeoutMillis: 30000
             })
@@ -29,15 +29,11 @@ class Database {
     }
 
 
-    /**
-     * 
-     * @param {*} inpt 
-     * @param {*} args 
-     * @returns [res, null], [null, error]
-     */
     static async exec(inpt, args) {
 
-        logger.info("Database.exec('" + inpt + "')")
+        logger.info(
+            `Database.exec = Prompt: ${inpt} | Args: ${args}`
+        )
 
         try {
             let data = await this.pool.query(inpt, args)
@@ -46,7 +42,6 @@ class Database {
         } catch (error) {
             logger.error(error)
             return [null, error]
-
         }
     }
 
@@ -54,130 +49,127 @@ class Database {
 
 }
 
+// Error means something unexpected happened
+// If createUser failed bc of a missing input, its an error
 
 class DatabaseUtils {
 
-
-    //User
-
-    /**
-     * return user object back
-     * return false -> error
-     */
     static async createUser(firstname, lastname, email, password) {
-        logger.info(`Create user:  + ${firstname}, ${lastname}, ${email}, ${password}`)
+        logger.info(`Create user: ${firstname}, ${lastname}, ${email}, ${password}`)
 
-        if (!firstname || !lastname || !email || !password) {
-            logger.error("input is missing")
-            return false
 
-        }
+        let somethingsMissing = false
+        let missingMessage = "Following fields are missing: ";
+        if (!firstname) { missingMessage += "Firstname, "; somethingsMissing = true; }
+        if (!lastname) { missingMessage += "Lastname, "; somethingsMissing = true; }
+        if (!email) { missingMessage += "Email, "; somethingsMissing = true; }
+        if (!password) { missingMessage += "Password, "; somethingsMissing = true; }
+
+        if (somethingsMissing) return [false, missingMessage]
 
 
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(password, salt);
 
 
-        const [data, error] = await Database.exec(
-            `INSERT INTO "user"(firstname, lastname, email, password) VALUES ('` + firstname + `', '` + lastname + `', '` + email + `', '` + hash + `') RETURNING *`
+        let [data, error] = await Database.exec(
+            `INSERT INTO "user"(firstname, lastname, email, password) 
+            VALUES ($1, $2, $3, $4) RETURNING *`,
+            [firstname, lastname, email, hash]
         );
 
-        if (data) {
-            return data.rows
-        }
         if (error) {
-            return error
+            error = "Not allowed to create user."
+            data = false
+            return [data, error]
         }
+
+        if (data.rows[0]) { data = data.rows[0] }
+
+        return [data, false]
 
     }
 
 
 
 
-    static async emailExists(email) {
-        const [data, error] = await Database.exec(`SELECT * FROM "user" WHERE email=$1`,
-            [email]);
+    static async emailExists_b(email) {
+        let [data, error] = await Database.exec(
+            `SELECT COUNT(*) FROM "user" WHERE email=$1`,
+            [email]
+        );
 
-        if (data.rowCount == 0) return false;
-        else if (data.rowCount == 1) return true
-        else logger.error("emailExists(" + email + ") something went wrong" + JSON.stringify(error))
+        let out = data.rows[0].count > 0
+
+        return out
     };
 
 
 
 
-    static async getUserByEmail(email) {
-        const [data, error] = await Database.exec(`SELECT * FROM "user" WHERE email=$1`, [
-            email,
-        ]);
+    static async getUserByEmail_o(email) {
+        let [data, error] = await Database.exec(
+            `SELECT * FROM "user" WHERE email=$1`,
+            [email]
+        );
 
-        if (!data) return error
-        else if (error) logger.error("ASD")
-
+        if (error) { data = false }
         return data.rows[0]
-
     };
 
-    static async matchPassword(password, hashPassword) {
-        const match = await bcrypt.compare(password, hashPassword);
-        return match
-    };
+
 
     static async getUserByID(id) {
 
-        const [data, error] = await Database.exec(
-            `SELECT * FROM "user" WHERE id = ` + id
+        let [data, error] = await Database.exec(
+            `SELECT * FROM "user" WHERE id=$1`,
+            [id]
         );
-        if (data.rowCount == 0) return false;
-        else if (data.rowCount == 1) return data.rows[0];
-        else {
-            logger.error("getUserByID(" + id + ") something went wrong" + JSON.stringify(error))
 
-        }
-
+        if (error) { data = false }
+        return data.rows[0]
 
     };
 
     static async deleteUser(id) {
 
-        const [data, error] = await Database.exec(
-            `DELETE FROM "user" WHERE id = ` + id
+        let res = await Database.exec(
+            `DELETE FROM "user" WHERE id=$1`,
+            [id]
         );
-
-        if (error) return false;
-        return true
+        if (res.Result.rowCount < 1) res = new Result(true, "No rows delete", false)
+        return res
     };
 
 
     //Course
 
 
-    /**
-     * return course object back
-     * return false -> error
-     */
     static async createCourse(name, html_markdown_code, creator_id) {
 
 
         logger.info("Create course: ", name, html_markdown_code, creator_id)
 
-        if (!name || !html_markdown_code || !creator_id) {
-            logger.error("input is missing")
-            return false
 
-        }
+        let somethingsMissing = false
+        let missingMessage = "Following fields are missing: ";
+        if (!name) { missingMessage += "name, "; somethingsMissing = true; }
+        if (!html_markdown_code) { missingMessage += "html_markdown_code, "; somethingsMissing = true; }
+        if (!creator_id) { missingMessage += "creator_id, "; somethingsMissing = true; }
+
+        if (somethingsMissing) return new Result(true, missingMessage, false)
 
 
-        const [data, error] = await Database.exec(
-            `INSERT INTO "course"(name, html_markdown_code, creator_id) VALUES ($1, $2, $3) RETURNING *`,
+
+        let res = await Database.exec(
+            `INSERT INTO "course"(name, html_markdown_code, creator_id) 
+            VALUES ($1, $2, $3) RETURNING *`,
             [name, html_markdown_code, creator_id]
         );
-        if (error) {
-            console.error(error)
-            return false
-        }
 
-        return data.rows[0]
+
+        if (!res.isError) res.Result = res.Result.rows[0]
+        return res
 
 
     }
@@ -186,26 +178,20 @@ class DatabaseUtils {
 
 
     static async deleteCourse(id) {
-
-        const [data, error] = await Database.exec(
-            `DELETE FROM "course" WHERE id = ` + id
+        let res = await Database.exec(
+            `DELETE FROM "course" WHERE id=$1`,
+            [id]
         );
+        if (res.Result.rowCount < 1) res = new Result(true, "No rows delete", false)
+        return res
 
-        if (error) return false;
-        return true
     };
 
 
-
-    /**
-     * return true
-     * return false -> error
-     */
     static async updateCourse(creator_id, course_id, name, html_markdown_code) {
 
         if (!name && !html_markdown_code) {
-            logger.error("updateCourse name AND html_markdown_code are false")
-            return false
+            return new Result(true, "Name AND Code are missing")
         }
 
         let cmd = ` UPDATE "course" SET `
@@ -220,12 +206,11 @@ class DatabaseUtils {
 
         cmd += `WHERE id = ` + course_id + ` AND creator_id = ` + creator_id
 
-        const [data, error] = await Database.exec(
+        const res = await Database.exec(
             cmd
         );
 
-        if (error) return false;
-        return true
+        return res
     };
 
 
@@ -237,22 +222,13 @@ class DatabaseUtils {
 
     static async getCourseByID(id) {
 
-
-
-        const [data, error] = await Database.exec(
-            `SELECT * FROM course WHERE id = ` + id
+        let res = await Database.exec(
+            `SELECT * FROM "course" WHERE id=$1`,
+            [id]
         );
 
-
-        if (error) {
-            logger.error(error)
-            return false
-        }
-        if (data.rowCount == 0) return false
-
-        logger.info("getCourseByID(" + id + ") = " + JSON.stringify(data.rows[0]))
-        return data.rows[0]
-
+        if (!res.isError) res.Result = res.Result.rows[0]
+        return res
 
 
     }
@@ -264,124 +240,79 @@ class DatabaseUtils {
 
         if (!course_id || !user_id) {
             logger.error("input is missing")
-            return false
-
+            return new Result(true, "Input is missing", false)
         }
 
-        logger.debug("userJoinCourse")
-        const [data, error] = await Database.exec(
-            `INSERT INTO user_course (user_id, course_id) VALUES ('` + user_id + `', '` + course_id + `')`,
+        const res = await Database.exec(
+            `INSERT INTO user_course (user_id, course_id) 
+            VALUES ($1, $2)`,
+            [user_id, course_id]
         );
 
-        if (error) {
-            logger.error(error)
-            return false;
-        }
-        return true;
-    }
+        return res
 
-    /**
-     * return [courses]
-     * return  [] -> user has no courses
-     * return false error
-     */
+    }
     static async getUserCourses(userID) {
 
 
-        const [data, error] = await Database.exec(
-            `SELECT course_id FROM user_course WHERE user_id = ` + userID
+        const res = await Database.exec(
+            `SELECT course_id, name 
+            FROM user_course, course 
+            WHERE user_course.course_id = course.id;`,
+            [user_id, course_id]
         );
 
-        logger.debug("User Courses")
-        logger.debug(data.rows)
 
+        res.Result = res.Result.rows
+        return res
 
-
-        const results = [];
-
-        for (const courseId of data.rows) {
-            try {
-
-                results.push(await DatabaseUtils.getCourseByID(courseId.course_id));
-            } catch (error) {
-                logger.error(`Error fetching data for course ID ${courseId}:`, error);
-                return false
-            }
-        }
-
-
-        return results;
 
     }
 
-
-    /**
-     * return false -> error
-     * return message object
-     */
     static async createMessage(content, userID, courseID) {
 
 
         logger.info("Create message: ", content, userID, courseID)
 
-        if (!content || !userID || !courseID) {
-            logger.error("input is missing")
-            return false
+        let somethingsMissing = false
+        let missingMessage = "Following fields are missing: ";
+        if (!content) { missingMessage += "content, "; somethingsMissing = true; }
+        if (!userID) { missingMessage += "userID, "; somethingsMissing = true; }
+        if (!courseID) { missingMessage += "courseID, "; somethingsMissing = true; }
 
-        }
-
-        try {
-            const data = await Database.exec(
-                `INSERT INTO "message" (content, user_id, course_id) VALUES ($1, $2, $3) RETURNING *`,
-                [content, userID, courseID]
-            );
-            logger.debug(data.rows[0])
-            return data.rows[0]
-
-        } catch (error) {
-            logger.error(error)
-            return false
-        }
+        if (somethingsMissing) return new Result(true, missingMessage, false)
 
 
+        const res = await Database.exec(
+            `INSERT INTO "message" (content, user_id, course_id) 
+            VALUES ($1, $2, $3) RETURNING *`,
+            [content, userID, courseID]
+        );
+        logger.debug(data.rows[0])
+        if (!res.isError) res.Result = res.Result.rows[0]
+        return res
     }
 
-
-
-    /**
-     * 
-     */
     static async getMessagesFromCourse(course_id) {
 
 
 
-        const [data, error] = await Database.exec(
-            `SELECT * FROM message WHERE course_id = ` + course_id
+        const res = await Database.exec(
+            `SELECT * FROM message, "user" 
+            WHERE message.user_id = "user".id
+            AND message.course_id = $1`,
+            [course_id]
         );
 
+        return res
 
-        for (let i = 0; i < data.rowCount; i++) {
-
-             let user = await DatabaseUtils.getUserByID(data.rows[i].user_id)
-
-             if(!user)
-             {
-                user = "user doesnt exist"
-             }
-
-             data.rows[i].sender = user.firstname + " " + user.lastname
-        }
-
-
-
-        if (data.rowCount == 0) return [];
-        logger.debug("getMessagesFromCourse(" + course_id + ") = " + data.rows[0])
-
-        return data.rows;
     }
 
 
-
+    static async matchPassword_b(password, hashPassword) {
+        const match = await bcrypt.compare(password, hashPassword);
+        return match
+    };
 
 
 
