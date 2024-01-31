@@ -21,11 +21,11 @@ registerrouter
         passport.authenticate('local-signup', (err, user, info) => {
             if(err) {
                 req.flash("main", err)
-                return res.redirect(400, "/register")
+                return res.redirect("/register")
             }
-            if(!user) { return res.redirect(500, "/login") }
+            if(!user) { return res.redirect("/login") }
 
-            req.login(user, () => res.redirect(200, "/"));
+            req.login(user, () => res.redirect("/"));
             
         })(req, res);
     });
