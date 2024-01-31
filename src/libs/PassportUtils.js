@@ -82,7 +82,7 @@ passport.deserializeUser(async (user, done) => {
 
   if (!user) { done(null, false) }
   let out = await DatabaseUtils.getUserByID_o(user.id);
-  if (!out) { done("Deserializing failed.", false) }
+  if (!out) { done(/* "Deserializing failed. " + JSON.stringify(user) */null, false) }
   done(null, out);
 
 });

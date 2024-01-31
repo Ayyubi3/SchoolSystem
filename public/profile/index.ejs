@@ -69,6 +69,8 @@
   async function deleteAccount() {
     await fetch("/profile", {
       method: "DELETE"
+    }).then(res => {
+        console.log("res")
     })
 
 

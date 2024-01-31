@@ -11,8 +11,7 @@ loginrouter
 
     .get('/login', (req, res) => {
 
-        const filepath = path.join(__dirname, "..", "..", "public", "login", "index.ejs")
-        res.render(filepath, { message: req.flash("main") })
+        res.render("login/index.ejs", { message: req.flash("main") })
 
     })
 

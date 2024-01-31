@@ -13,8 +13,7 @@ registerrouter
 
     .get('/register', (req, res) => {
 
-        const filepath = path.join(__dirname, "..", "..", "public", "register", "index.ejs")
-        res.render(filepath, {message: req.flash("main")})
+        res.render("register/index.ejs", {message: req.flash("main")})
 
     })
 

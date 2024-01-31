@@ -14,8 +14,6 @@ dashboardrouter
 
     .get('/dashboard', async (req, res) => {
 
-        const filepath = path.join(__dirname, "..", "..", "public", "dashboard", "index.ejs")
-
         const [data, error] = await DatabaseUtils.getUserCourses(await req.user["id"])
         if ( error )
         {
@@ -26,7 +24,7 @@ dashboardrouter
 
         console.log(data)
 
-        res.render(filepath, { Courses: data, message: req.flash("main") })
+        res.render("dashboard/index.ejs", { Courses: data, message: req.flash("main") })
 
     })
 

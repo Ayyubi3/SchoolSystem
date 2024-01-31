@@ -11,7 +11,7 @@ profilerouter
 
     .get('/profile', async (req, res) => {
 
-        const user = await DatabaseUtils.getUserByID(await req.user["id"])
+        const user = await DatabaseUtils.getUserByID_o(await req.user["id"])
 
         if (!user)
         {
@@ -26,8 +26,7 @@ profilerouter
         logger.info(JSON.stringify(user))
 
 
-        const filepath = path.join(__dirname, "..", "..", "public", "profile", "index.ejs")
-        res.render(filepath, { user, message: req.flash("main") })
+        res.render("profile/index.ejs", { user, message: req.flash("main") })
 
     })
 
@@ -45,8 +44,7 @@ profilerouter
             return
         }
 
-
-        logger.info("deleting" + (await req.user["id"]))
+        logger.info("deleting " + (await req.user["id"]))
 
         req.flash("main", "deleted user")
         res.redirect("/")

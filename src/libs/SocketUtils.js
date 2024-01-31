@@ -4,7 +4,7 @@ const { DatabaseUtils } = require("../libs/DatabaseUtils")
 const io = require("socket.io")(process.env.SOCKETPORT, {
 
   cors: {
-    origin: "http://localhost:3000 ",
+    origin: process.env.ORIGINURLS,
     credentials: true
   }
 
@@ -43,8 +43,9 @@ io.on('connection', socket => {
     logger.info("user " + user.email + " tries to join room " + room)
 
 
-    const userCourse = await DatabaseUtils.getUserCourses(user.id)
+    const [data, error] = await DatabaseUtils.getUserCourses(user.id)
 
+    userCourse = data
     console.log(userCourse)
 
 

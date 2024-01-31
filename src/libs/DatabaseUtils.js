@@ -15,14 +15,17 @@ class Database {
         try {
 
             this.pool = new Pool({
-                user: "SchoolSystem",
-                host: "localhost",
-                database: "SchoolSystem",
-                password: "SchoolSystem",
-                port: 5432,
+                user: process.env.DBUSER,
+                host: process.env.DBHOST,
+                database: process.env.DBDATABASE,
+                password: process.env.DBPASSWORD,
+                port: process.env.DBPORT,
                 max: 10,
                 idleTimeoutMillis: 30000
             })
+
+            this.pool.query("SELECT NOW()")
+
         } catch (error) {
             logger.error(error)
         }
@@ -129,12 +132,11 @@ class DatabaseUtils {
 
     static async deleteUser(id) {
 
-        let res = await Database.exec(
+        let [data, error] = await Database.exec(
             `DELETE FROM "user" WHERE id=$1`,
             [id]
         );
-        if (res.Result.rowCount < 1) res = new Result(true, "No rows delete", false)
-        return res
+        return !error
     };
 
 
@@ -176,18 +178,17 @@ class DatabaseUtils {
 
 
 
-    static async deleteCourse(id) {
-        let res = await Database.exec(
+    static async deleteCourse_b(id) {
+        let [data, error] = await Database.exec(
             `DELETE FROM "course" WHERE id=$1`,
             [id]
         );
-        if (res.Result.rowCount < 1) res = new Result(true, "No rows delete", false)
-        return res
+        return !error
 
     };
 
 
-    static async updateCourse(creator_id, course_id, name, html_markdown_code) {
+    static async updateCourse_b(creator_id, course_id, name, html_markdown_code) {
 
         if (!name && !html_markdown_code) {
             return new Result(true, "Name AND Code are missing")
@@ -205,11 +206,11 @@ class DatabaseUtils {
 
         cmd += `WHERE id = ` + course_id + ` AND creator_id = ` + creator_id
 
-        const res = await Database.exec(
+        const [data, error] = await Database.exec(
             cmd
         );
 
-        return res
+        return !error
     };
 
 

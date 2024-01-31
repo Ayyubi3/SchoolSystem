@@ -1,5 +1,5 @@
 CREATE TABLE "user" (
-  id SERIAL PRIMARY KEY,
+  id SERIAL PRIMARY KEY, -- Trigger sets id
   firstname VARCHAR(255) NOT NULL,
   lastname VARCHAR(255) NOT NULL,
   password VARCHAR(255) NOT NULL,
@@ -8,16 +8,16 @@ CREATE TABLE "user" (
 
 
 CREATE TABLE course (
-  id SERIAL PRIMARY KEY,
+  id SERIAL PRIMARY KEY, -- Trigger sets id
   name VARCHAR(255) NOT NULL,
   html_markdown_code TEXT,
-  creator_id INTEGER REFERENCES "user"(id) ON DELETE SET NULL
+  creator_id INTEGER REFERENCES "user"(id) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 
 CREATE TABLE user_course (
-  user_id INTEGER REFERENCES "user"(id) ON DELETE CASCADE,
-  course_id INTEGER REFERENCES course(id) ON DELETE CASCADE,
+  user_id INTEGER REFERENCES "user"(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  course_id INTEGER REFERENCES course(id) ON DELETE CASCADE ON UPDATE CASCADE,
   PRIMARY KEY (user_id, course_id)
 );
 

@@ -13,8 +13,7 @@ createcourserouter
 
     .get('/createcourse', (req, res) => {
 
-        const filepath = path.join(__dirname, "..", "..", "public", "createcourse", "index.ejs")
-        res.render(filepath, { message: req.flash("main") })
+        res.render("createcourse/index.ejs", { message: req.flash("main") })
 
     })
 
@@ -27,12 +26,12 @@ createcourserouter
             req.flash("main", "Could not create course")
             res.redirect("/createcourse")
             return
-
         }
-        course = data
+
+        let course = data
         console.log(course)
 
-        console.log(await DatabaseUtils.userJoinCourse(course.id, req.body.creator_id))
+        console.log(await DatabaseUtils.userJoinCourse(course.id, course.creator_id))
 
         logger.info(req.body.creator_id + " creates " + req.body.name)
 

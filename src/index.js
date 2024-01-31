@@ -11,9 +11,9 @@ const pgSession = require('connect-pg-simple')(session)
 
 const flash = require("connect-flash")
 
+const path = require("path")
 
-
-
+app.set("views", path.join(__dirname, "..", "public")) 
 app.set("view-engine", "ejs")
 
 app.use(express.urlencoded({ extended: true }));
@@ -71,7 +71,7 @@ app.get('/', async (req, res) => {
 		const user = await DatabaseUtils.getUserByID_o(await req.user["id"])
 		name = ", " + user.firstname + " " + user.lastname
 	}
-	res.render(require("path").join("..", "public", "index", "index.ejs"), { user: name, message: req.flash("main") })
+	res.render("index/index.ejs", { user: name, message: req.flash("main") })
 })
 
 

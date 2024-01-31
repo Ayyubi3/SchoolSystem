@@ -62,6 +62,8 @@ courserouter
             return
         }
 
+
+        // FIXME Their has to be a better way
         let CourseMessages = data
 
         let outputMessages = []
@@ -79,13 +81,8 @@ courserouter
         });
 
 
-
-        console.log("outputMessages")
-        console.log(outputMessages)
-
-        const filepath = path.join(__dirname, "..", "..", "public", "course", "index.ejs")
         const style = require("fs").readFileSync(path.join(__dirname, "..", "..", "public", "course", "style.css"))
-        res.render(filepath, {
+        res.render("course/index.ejs", {
             user,
             course,
 
@@ -102,19 +99,17 @@ courserouter
 
     .get('/course/:id/edit', async (req, res) => {
 
-        const course = await DatabaseUtils.getCourseByID(req.params.id)
+        const course = await DatabaseUtils.getCourseByID_o(req.params.id)
 
         if (!course) {
             res.send("Course doesnt exist")
             return
         }
 
-        const userID = await req.user["id"]
-
-        let canEdit = course.creator_id == userID
+        let canEdit = await req.user["id"] == course.creator_id
 
         if (!canEdit) {
-            res.send("Dont have the rights to edit")
+            res.send("Please contact the creator to edit this page")
             return
         }
 
@@ -134,16 +129,13 @@ courserouter
 
         const userID = await req.user["id"]
 
-        const resp = await DatabaseUtils.userJoinCourse(req.params.id, userID)
+        const joined = await DatabaseUtils.userJoinCourse(req.params.id, userID)
 
-        if (!resp) {
-            logger.error("User " + userID + " couldnt join course " + req.params.id)
+        if (!joined) {
             req.flash("main", "Could not join " + req.params.id)
             res.send("Cant join this course!")
             return
         }
-
-        console.log("res")
 
         res.redirect("/course/" + req.params.id)
 
@@ -157,11 +149,10 @@ courserouter
 
         console.log(req.body)
 
-        const data = await DatabaseUtils.updateCourse(user_ID, req.params.id, req.body.speaker, req.body.html_markdown_code.replace(/`/g, '\\`'))
+        const data = await DatabaseUtils.updateCourse_b(user_ID, req.params.id, req.body.speaker, req.body.html_markdown_code.replace(/`/g, '\\`'))
 
 
         if (!data) {
-            logger.error("User " + user_ID + " couldnt update course " + req.params.id)
             req.flash("main", "Could not update " + req.params.id)
             res.send("Cant update this course!")
             return
@@ -176,17 +167,18 @@ courserouter
 
     .delete('/course/:id', async (req, res) => {
 
-        const course = await DatabaseUtils.getCourseByID(req.params.id)
+        const course = await DatabaseUtils.getCourseByID_o(req.params.id)
 
         if (!course) {
-            res.status(500).json({ error: "Course doesnt exist" })
+            res.send("Course doesnt exist" )
+            return
         }
 
         const userID = await req.user["id"]
 
         let deleteCourse = false
         if (course.creator_id == userID) {
-            deleteCourse = await DatabaseUtils.deleteCourse(req.params.id)
+            deleteCourse = await DatabaseUtils.deleteCourse_b(req.params.id)
         }
 
 
