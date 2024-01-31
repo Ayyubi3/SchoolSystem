@@ -46,6 +46,7 @@ profilerouter
 
         logger.info("deleting " + (await req.user["id"]))
 
+        
         req.flash("main", "deleted user")
         res.redirect("/")
 
