@@ -95,7 +95,6 @@
         speaker: document.getElementById("speakers").value,
         html_markdown_code: simplemde.value()
       }
-      console.log(body)
       fetch("<%= url %>", {
         method: 'PUT',
         headers: {
@@ -103,7 +102,14 @@
         },
         body: JSON.stringify(body)
       })
-      
+      .then(res => {
+        console.log(res.status)
+        if (res.status == 200) {
+          window.location = "<%= url %>"
+        } else {
+          alert("Something went wrong")
+        }
+      })
       .catch(error => console.error('Error:', error));
     })
     

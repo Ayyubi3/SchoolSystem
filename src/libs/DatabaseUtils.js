@@ -233,7 +233,7 @@ class DatabaseUtils {
     }
 
 
-    static async userJoinCourse(course_id, user_id) {
+    static async userJoinCourse_b(course_id, user_id) {
 
         logger.info("User join course: " + course_id + user_id)
 
@@ -246,6 +246,24 @@ class DatabaseUtils {
             `INSERT INTO user_course (user_id, course_id) 
             VALUES ($1, $2)`,
             [user_id, course_id]
+        );
+
+        return !error
+
+    }
+
+    static async userLeaveCourse_b(user_id) {
+
+        logger.info("User leave course: " + user_id)
+
+        if (!user_id) {
+            logger.error("input is missing")
+            return false
+        }
+
+        const [data, error] = await Database.exec(
+            `DELETE FROM user_course WHERE user_id = $1`,
+            [user_id]
         );
 
         return !error

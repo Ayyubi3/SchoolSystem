@@ -42,9 +42,12 @@ courserouter
         let isMember = isCreator
 
         if (!isMember) {
-            let courses = await DatabaseUtils.getUserCourses(user.id)
+            let [data, error] = await DatabaseUtils.getUserCourses(user.id)
 
-            if (!course) { logger.error("Couldnt get courses"); return }
+            const courses = data
+
+
+            if (error) { res.send(error); return }
 
             isMember = courses.some(element => element.id == course.id)
 
@@ -129,15 +132,16 @@ courserouter
 
         const userID = await req.user["id"]
 
-        const joined = await DatabaseUtils.userJoinCourse(req.params.id, userID)
+        const joined = await DatabaseUtils.userJoinCourse_b(req.params.id, userID)
 
         if (!joined) {
             req.flash("main", "Could not join " + req.params.id)
-            res.send("Cant join this course!")
+            res.sendStatus(400)
             return
         }
 
-        res.redirect("/course/" + req.params.id)
+        res.sendStatus(200)
+
 
     })
 
@@ -147,20 +151,18 @@ courserouter
 
         const user_ID = await req.user["id"]
 
-        console.log(req.body)
-
         const data = await DatabaseUtils.updateCourse_b(user_ID, req.params.id, req.body.speaker, req.body.html_markdown_code.replace(/`/g, '\\`'))
 
 
         if (!data) {
             req.flash("main", "Could not update " + req.params.id)
-            res.send("Cant update this course!")
+            res.sendStatus(400)
             return
         }
 
         req.flash("main", "Updated course")
+        res.sendStatus(200)
 
-        // FIXME Cant redirect user to update new data 
     })
 
 
@@ -170,7 +172,7 @@ courserouter
         const course = await DatabaseUtils.getCourseByID_o(req.params.id)
 
         if (!course) {
-            res.send("Course doesnt exist" )
+            res.sendStatus(500)
             return
         }
 
@@ -185,15 +187,37 @@ courserouter
         if (!deleteCourse) {
             req.flash("main", "Cant delete course")
             logger.error("Couldnt delete course")
+            res.sendStatus(400)
         }
 
         logger.info("deleting course " + (req.params.id))
 
+        res.sendStatus(200)
 
         // FIXME Cant redirect user to update new data 
 
 
     })
+
+    .unsubscribe('/course/:id', async (req, res) => {
+
+        const user_ID = await req.user["id"]
+
+        const data = await DatabaseUtils.userLeaveCourse_b(user_ID)
+
+        if (!data) {
+            req.flash("main", "Could not update " + req.params.id)
+            res.sendStatus(400)
+            return
+        }
+
+        req.flash("main", "Updated course")
+        res.sendStatus(200)
+
+    })
+
+
+
 
 
 

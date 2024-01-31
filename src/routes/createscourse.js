@@ -31,7 +31,7 @@ createcourserouter
         let course = data
         console.log(course)
 
-        console.log(await DatabaseUtils.userJoinCourse(course.id, course.creator_id))
+        console.log(await DatabaseUtils.userJoinCourse_b(course.id, course.creator_id))
 
         logger.info(req.body.creator_id + " creates " + req.body.name)
 

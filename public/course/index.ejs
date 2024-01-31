@@ -44,9 +44,21 @@
       <script>
         document.getElementById('delButton').addEventListener("click", async () => {
           await fetch(window.location.pathname, {
-            method: 'DELETE'
-          })
+              method: 'DELETE'
+            })
+            .then(res => {
+              console.log(res.status)
+              if (res.status == 200) {
+                window.location = "/dashboard"
+              } else {
+                alert("Something went wrong")
+              }
+            })
+
+
+
         })
+
 
 
         document.getElementById('editButton').addEventListener("click", async () => {
@@ -65,12 +77,18 @@
       <script>
         document.getElementById('joinButton').addEventListener("click", async () => {
           await fetch(window.location.pathname, {
-            method: 'POST'
-          }).then(data => {
-            console.log(data)
-          }).catch(error => {
-            console.error('Error:', error);
-          });
+              method: 'POST'
+            })
+
+            .then(res => {
+              console.log(res.status)
+              if (res.status == 200) {
+                window.location.reload()
+              } else {
+                alert("Something went wrong")
+              }
+            })
+
         })
       </script>
 
@@ -78,6 +96,24 @@
       <% } else { %>
 
       <button class="ctrlbtns" id="leaveButton">Leave Course</button>
+      <script>
+        document.getElementById('leaveButton').addEventListener("click", async () => {
+          await fetch(window.location.pathname, {
+              method: 'UNSUBSCRIBE'
+            })
+
+            .then(res => {
+              console.log(res.status)
+              if (res.status == 200) {
+                window.location.reload()
+              } else {
+                alert("Something went wrong")
+              }
+            })
+
+        })
+      </script>
+
 
 
       <% } %>
@@ -241,13 +277,13 @@
   <script>
     <% outputMessages.forEach((element) => { %>
 
-      appendMessage(
-        "<%= element.message.sender %>",
-        "",
-        "<%= element.side %>",
-        "<%= element.message.content %>",
+    appendMessage(
+      "<%= element.message.sender %>",
+      "",
+      "<%= element.side %>",
+      "<%= element.message.content %>",
 
-        )
+    )
 
     <% }) %>
   </script>
