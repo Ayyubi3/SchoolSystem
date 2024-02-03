@@ -20,7 +20,6 @@ courserouter
         const course = await DatabaseUtils.getCourseByID_o(req.params.id);
 
         if (!course) {
-            req.flash("main", "No course with this id")
             res.redirect("/dashboard")
             return
         }
@@ -32,56 +31,25 @@ courserouter
         let user = await DatabaseUtils.getUserByID_o(await req.user["id"])
 
         if (!user) {
-            req.flash("main", "User doesnt exist") 
             res.redirect("/login") 
         }
 
 
 
         let isCreator = user.id == course.creator_id
-        let isMember = isCreator
-
-        if (!isMember) {
-            let [data, error] = await DatabaseUtils.getUserCourses(user.id)
-
-            const courses = data
-
-
-            if (error) { res.send(error); return }
-
-            isMember = courses.some(element => element.id == course.id)
-
-        }
+        let isMember = isCreator || await DatabaseUtils.isUserInCourse_b(user.id)
 
 
 
-
-
-
-        const [data, error] = await DatabaseUtils.getMessagesFromCourse(req.params.id)
+        const [data, error] = await DatabaseUtils.getMessagesFromCourseWithSide(req.params.id, user.id)
 
         if (error) {
-            req.flash("main", error)
-            return
+            // FIXME: Show error in chat 
+            console.log(error)
         }
 
 
-        // FIXME Their has to be a better way
         let CourseMessages = data
-
-        let outputMessages = []
-        CourseMessages.forEach(async element => {
-
-            outputMessages.push(
-                {
-
-                    message: element,
-                    side: element.user_id == user.id ? "right" : "left"
-                }
-            )
-
-
-        });
 
 
         const style = require("fs").readFileSync(path.join(__dirname, "..", "..", "public", "course", "style.css"))
@@ -91,7 +59,7 @@ courserouter
 
             isMember, isCreator,
 
-            outputMessages,
+            CourseMessages,
 
             style,
             message: req.flash("main")
@@ -193,8 +161,6 @@ courserouter
         logger.info("deleting course " + (req.params.id))
 
         res.sendStatus(200)
-
-        // FIXME Cant redirect user to update new data 
 
 
     })

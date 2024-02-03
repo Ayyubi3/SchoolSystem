@@ -46,7 +46,6 @@ io.on('connection', socket => {
     const [data, error] = await DatabaseUtils.getUserCourses(user.id)
 
     userCourse = data
-    console.log(userCourse)
 
 
     const valid = userCourse.some(element => {
@@ -69,19 +68,28 @@ io.on('connection', socket => {
 
 
     const senderRaw = await socket.request.user
-    const sender = {
+    console.log(senderRaw)
+    
+    let output = {
+      content: message,
       firstname: senderRaw.firstname,
       lastname: senderRaw.lastname,
-      id: senderRaw.id
+      user_id: senderRaw.id,
+      email: senderRaw.email
     }
 
-    await DatabaseUtils.createMessage(message, sender.id, room)
+
+    const [data, error] = await DatabaseUtils.createMessage(output.content, output.user_id, room)
+
+    if (error) {
+      //FIXME: Error checking
+      console.log(error)
+    }
+
+    console.log(output)
 
     socket.to(room).emit("chat-message",
-      {
-        message,
-        sender
-      }
+        output
 
     )
 

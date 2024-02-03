@@ -285,10 +285,25 @@ class DatabaseUtils {
 
     }
 
+    static async isUserInCourse_b(user_id) {
+
+
+        let [data, error] = await Database.exec(
+            `SELECT COUNT(*) FROM user_course WHERE user_id=$1;`,
+            [user_id]
+        );
+
+        if (error) return false
+        if (data.rows[0].count > 0) return true
+
+        return false
+
+    }
+
     static async createMessage(content, userID, courseID) {
 
 
-        logger.info("Create message: ", content, userID, courseID)
+        console.log("Create message: ", content, userID, courseID)
 
         let somethingsMissing = false
         let missingMessage = "Following fields are missing: ";
@@ -296,28 +311,51 @@ class DatabaseUtils {
         if (!userID) { missingMessage += "userID, "; somethingsMissing = true; }
         if (!courseID) { missingMessage += "courseID, "; somethingsMissing = true; }
 
-        if (somethingsMissing) return new Result(true, missingMessage, false)
+        if (somethingsMissing) return [false, missingMessage]
 
 
-        const res = await Database.exec(
+        let [data, error] = await Database.exec(
             `INSERT INTO "message" (content, user_id, course_id) 
             VALUES ($1, $2, $3) RETURNING *`,
             [content, userID, courseID]
         );
-        logger.debug(data.rows[0])
-        if (!res.isError) res.Result = res.Result.rows[0]
-        return res
+    
+        if (!error) {
+            data = data.rows[0]
+        }
+        return [data, error]
     }
 
     static async getMessagesFromCourse(course_id) {
 
 
 
-        const [data, error] = await Database.exec(
+        let [data, error] = await Database.exec(
             `SELECT * FROM message, "user" 
             WHERE message.user_id = "user".id
             AND message.course_id = $1`,
             [course_id]
+        );
+
+        if (error){
+            return [false, "Couldnt get messages."]
+        }
+        return [data.rows || [], false]
+
+    }
+
+
+    static async getMessagesFromCourseWithSide(course_id, user_id) {
+
+
+
+        let [data, error] = await Database.exec(
+            `SELECT message.*, "user".firstname, "user".lastname, "user".email,
+            CASE WHEN "user".id = $2 THEN 'right' ELSE 'left' END AS side
+            FROM message, "user" 
+            WHERE message.user_id = "user".id
+            AND message.course_id = $1`,
+            [course_id, user_id]
         );
 
         if (error){

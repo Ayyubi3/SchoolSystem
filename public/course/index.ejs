@@ -138,23 +138,15 @@
       </div>
     </header>
     <main class="msger-chat">
-
-
-
     </main>
     <form class="msger-inputarea">
       <input type="text" class="msger-input" placeholder="Enter your message...">
       <button type="submit" class="msger-send-btn">Send</button>
     </form>
-
-
-
     <script>
       const msgerForm = get(".msger-inputarea");
       const msgerInput = get(".msger-input");
       const msgerChat = get(".msger-chat");
-
-
 
       function appendMessage(name, img, side, text) {
         //   Simple solution for small apps
@@ -165,7 +157,7 @@
       <div class="msg-bubble">
         <div class="msg-info">
           <div class="msg-info-name">${name}</div>
-          <div class="msg-info-time">${formatDate(new Date())}</div>
+          <div class="msg-info-time">${/*FIXME: Use sender time*/formatDate(new Date())}</div>
           </div>
           
           <div class="msg-text">${text}</div>
@@ -177,9 +169,6 @@
         msgerChat.insertAdjacentHTML("beforeend", msgHTML);
         msgerChat.scrollTop += 500;
       }
-
-
-
       // Utils
       function get(selector, root = document) {
         return root.querySelector(selector);
@@ -198,6 +187,17 @@
     </script>
 
     <script defer>
+      function showMessage(firstname, lastname, email, side, msg) {
+        appendMessage(
+          `${firstname} ${lastname} (${email})`,
+          "",
+          side,
+          msg
+        )
+      }
+
+
+
       msgerForm.addEventListener("submit", event => {
         event.preventDefault();
 
@@ -206,9 +206,6 @@
 
         sendMessage(msgText)
 
-        let username = "<%= user.firstname %>"
-
-        appendMessage(username, "", "right", msgText)
 
         msgerInput.value = "";
 
@@ -226,19 +223,20 @@
 
 
 
-      socket.on('chat-message', data => {
+      socket.on('chat-message', message => {
 
-        let senderID = <%= user.id %>
+        console.log(message)
 
-        let side = "left"
-        if (senderID == data.sender.id) side = "right"
+          let senderID = "<%= user.id %>"
 
-        appendMessage(data.sender.firstname, "", side, data.message)
+          let side = "left"
+          if (senderID == message.user_id) side = "right"
 
+          console.log("SIDE: ", side)
+          showMessage(message.firstname, message.lastname, message.email, message.side, message.content)
+        }
 
-        console.log(data)
-
-      })
+      )
 
 
       socket.on('connect_error', error => {
@@ -274,19 +272,13 @@
 
 
 
+
+  <% CourseMessages.forEach((element) => { %>
+
   <script>
-    <% outputMessages.forEach((element) => { %>
-
-    appendMessage(
-      "<%= element.message.sender %>",
-      "",
-      "<%= element.side %>",
-      "<%= element.message.content %>",
-
-    )
-
-    <% }) %>
+    showMessage("<%= element.firstname %>", "<%= element.lastname %>", "<%= element.email %>", "<%= element.side %>", "<%= element.content %>")
   </script>
+  <% }) %>
 
 </body>
 
