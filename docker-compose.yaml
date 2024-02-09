@@ -1,0 +1,12 @@
+version: "3"
+services: 
+  schoolsystem:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: schoolsystem
+      POSTGRES_USER: schoolsystem
+      POSTGRES_DB: schoolsystem
+  app:
+    image: schoolsystemdocker 
+    ports:
+      - 3001:3000
