@@ -18,12 +18,12 @@ const logger = winston.createLogger({
 });
 
 winston.addColors({
-    
-        error: 'bold red blackBG',
-        warn: 'underline yellow',
-        info: 'white',
-        debug: 'dim grey'
-      
+
+  error: 'bold red blackBG',
+  warn: 'underline yellow',
+  info: 'white',
+  debug: 'dim grey'
+
 })
 
 //
@@ -37,4 +37,4 @@ if (process.env.ENV !== 'PROD') {
 }
 
 
-module.exports = {logger}
+module.exports = { logger }

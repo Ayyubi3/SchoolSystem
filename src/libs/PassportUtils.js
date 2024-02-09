@@ -32,7 +32,7 @@ passport.use(
       );
       if (error) return done(`Couldnt create user: ${error}`)
 
-      return done(null, {id: data.id});
+      return done(null, { id: data.id });
 
 
     }
@@ -61,7 +61,7 @@ passport.use(
       if (!isMatch) {
         return done("Incorrect Password.", false);
       }
-      return done(null, { id: user.id }); 
+      return done(null, { id: user.id });
 
     }
   )

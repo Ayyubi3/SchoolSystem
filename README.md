@@ -79,7 +79,8 @@ School System is a web application designed to empower teachers to provide acces
 
     ENV=DEV #DEV/PROD
     ```
-
+docker build -t schoolsystemdocker
+docker compose up
 
 1. Run the application:
 

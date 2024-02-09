@@ -69,7 +69,7 @@ io.on('connection', socket => {
 
     const senderRaw = await socket.request.user
     console.log(senderRaw)
-    
+
     let output = {
       content: message,
       firstname: senderRaw.firstname,
@@ -89,7 +89,7 @@ io.on('connection', socket => {
     console.log(output)
 
     socket.to(room).emit("chat-message",
-        output
+      output
 
     )
 
