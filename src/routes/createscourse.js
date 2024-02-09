@@ -6,38 +6,38 @@ const { DatabaseUtils } = require("../libs/DatabaseUtils")
 
 
 var express = require('express'),
-    createcourserouter = express.Router();
+  createcourserouter = express.Router();
 
 createcourserouter
 
 
-    .get('/createcourse', (req, res) => {
+  .get('/createcourse', (req, res) => {
 
-        res.render("createcourse/index.ejs", { message: req.flash("main") })
+    res.render("createcourse/index.ejs", { message: req.flash("main") })
 
-    })
+  })
 
 
-    .post('/createcourse', async (req, res) => {
+  .post('/createcourse', async (req, res) => {
 
-        const [data, error] = await DatabaseUtils.createCourse(req.body.name, req.body.html_markdown_code.replace(/`/g, '\\`'), await req.user["id"])
-        
-        if (error) {
-            req.flash("main", "Could not create course")
-            res.redirect("/createcourse")
-            return
-        }
+    const [data, error] = await DatabaseUtils.createCourse(req.body.name, req.body.html_markdown_code.replace(/`/g, '\\`'), await req.user["id"])
 
-        let course = data
-        console.log(course)
+    if (error) {
+      req.flash("main", "Could not create course")
+      res.redirect("/createcourse")
+      return
+    }
 
-        console.log(await DatabaseUtils.userJoinCourse_b(course.id, course.creator_id))
+    let course = data
+    console.log(course)
 
-        logger.info(req.body.creator_id + " creates " + req.body.name)
+    console.log(await DatabaseUtils.userJoinCourse_b(course.id, course.creator_id))
 
-        res.redirect("/course/" + course.id)
+    logger.info(req.body.creator_id + " creates " + req.body.name)
 
-    })
+    res.redirect("/course/" + course.id)
+
+  })
 
 
 

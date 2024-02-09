@@ -7,7 +7,6 @@ const io = require("socket.io")(process.env.SOCKETPORT, {
     origin: process.env.ORIGINURLS,
     credentials: true
   }
-
 })
 
 

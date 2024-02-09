@@ -13,7 +13,7 @@ const flash = require("connect-flash")
 
 const path = require("path")
 
-app.set("views", path.join(__dirname, "..", "public")) 
+app.set("views", path.join(__dirname, "..", "public"))
 app.set("view-engine", "ejs")
 
 app.use(express.urlencoded({ extended: true }));
@@ -28,21 +28,21 @@ Database.init()
 
 
 const SessionInstance = session({
-	store: new pgSession({
+  store: new pgSession({
 
-		pool: Database.pool,
-		tableName: 'session',
-		createTableIfMissing: true
-	}),
-	name: 'SID',
-	secret: process.env.SESSION_SECRET,
-	resave: true,
-	saveUninitialized: true,
-	
-	cookie: {
-		maxAge: 1000 * 60 * 10,
-		sameSite: true,
-	}
+    pool: Database.pool,
+    tableName: 'session',
+    createTableIfMissing: true
+  }),
+  name: 'SID',
+  secret: process.env.SESSION_SECRET,
+  resave: true,
+  saveUninitialized: true,
+
+  cookie: {
+    maxAge: 1000 * 60 * 10,
+    sameSite: true,
+  }
 })
 
 module.exports = { SessionInstance }
@@ -66,12 +66,12 @@ app.use(flash())
 
 app.get('/', async (req, res) => {
 
-	let name = ""
-	if (req.user) {
-		const user = await DatabaseUtils.getUserByID_o(await req.user["id"])
-		name = ", " + user.firstname + " " + user.lastname
-	}
-	res.render("index/index.ejs", { user: name, message: req.flash("main") })
+  let name = ""
+  if (req.user) {
+    const user = await DatabaseUtils.getUserByID_o(await req.user["id"])
+    name = ", " + user.firstname + " " + user.lastname
+  }
+  res.render("index/index.ejs", { user: name, message: req.flash("main") })
 })
 
 
@@ -84,12 +84,12 @@ app.use(loginrouter)
 
 
 app.use(
-	(req, res, next) => {
-		if (req.isAuthenticated()) {
-			return next();
-		}
-		res.redirect("/login");
-	}
+  (req, res, next) => {
+    if (req.isAuthenticated()) {
+      return next();
+    }
+    res.redirect("/login");
+  }
 )
 
 
@@ -114,6 +114,6 @@ app.use(filesrouter)
 
 const port = process.env.EXPRESS_SERVER
 app.listen(port, () => {
-	logger.info(`Express Server gestartet -> PORT: ${port}`)
+  logger.info(`Express Server gestartet -> PORT: ${port}`)
 })
 
