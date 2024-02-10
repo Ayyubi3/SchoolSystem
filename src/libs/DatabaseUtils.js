@@ -24,7 +24,7 @@ class Database {
         idleTimeoutMillis: 30000
       })
 
-      this.pool.query("SELECT NOW()")
+      await this.pool.query("SELECT NOW()")
 
     } catch (error) {
       logger.error(error)

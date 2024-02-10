@@ -6,7 +6,10 @@ services:
       POSTGRES_PASSWORD: schoolsystem
       POSTGRES_USER: schoolsystem
       POSTGRES_DB: schoolsystem
+    volumes:
+      - /home/ayyubi/SchoolSystem/schema:/docker-entrypoint-initdb.d 
   app:
     image: schoolsystemdocker 
     ports:
-      - 3001:3000
+      - 3000:3000
+      - 3001:3001

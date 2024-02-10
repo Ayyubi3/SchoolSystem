@@ -4,7 +4,7 @@ const { DatabaseUtils } = require("../libs/DatabaseUtils")
 const io = require("socket.io")(process.env.SOCKETPORT, {
 
   cors: {
-    origin: process.env.ORIGINURLS,
+    origin: "http://localhost:3000",
     credentials: true
   }
 })
@@ -89,7 +89,7 @@ io.on('connection', socket => {
 
     socket.to(room).emit("chat-message",
       output
-
+      // FIXME: Send message back to client
     )
 
 
