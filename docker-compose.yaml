@@ -10,6 +10,8 @@ services:
       - /home/ayyubi/SchoolSystem/schema:/docker-entrypoint-initdb.d 
   webserver:
     image: schoolsystemdocker 
+    volumes: 
+      - .:/home/ayyubi/SchoolSystem
     ports:
       - 3000:3000
       - 3001:3001

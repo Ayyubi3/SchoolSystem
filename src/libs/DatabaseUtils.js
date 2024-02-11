@@ -21,10 +21,11 @@ class Database {
         password: process.env.DBPASSWORD,
         port: process.env.DBPORT,
         max: 10,
-        idleTimeoutMillis: 30000
       })
+      //
 
-      await this.pool.query("SELECT NOW()")
+
+      console.log(await this.pool.query("SELECT NOW()"))
 
     } catch (error) {
       logger.error(error)
