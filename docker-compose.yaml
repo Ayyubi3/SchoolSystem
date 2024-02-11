@@ -1,6 +1,6 @@
 version: "3"
 services: 
-  schoolsystem:
+  database:
     image: postgres
     environment:
       POSTGRES_PASSWORD: schoolsystem
@@ -8,7 +8,7 @@ services:
       POSTGRES_DB: schoolsystem
     volumes:
       - /home/ayyubi/SchoolSystem/schema:/docker-entrypoint-initdb.d 
-  app:
+  webserver:
     image: schoolsystemdocker 
     ports:
       - 3000:3000
