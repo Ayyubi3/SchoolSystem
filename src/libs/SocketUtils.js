@@ -87,9 +87,9 @@ io.on('connection', socket => {
 
     console.log(output)
 
-    socket.to(room).emit("chat-message",
+    io.in(room).emit("chat-message",
       output
-      // FIXME: Send message back to client
+
     )
 
 
