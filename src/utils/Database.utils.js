@@ -11,7 +11,7 @@ class Database {
       const client = await this.pool.connect()
       try {
         const result = await client.query(`SELECT NOW()`)
-        console.log(`database test: ${result.rows[0]}`)
+        console.log(`database test: ${JSON.stringify(result.rows[0])}`)
       } finally {
         client.release()
       }
