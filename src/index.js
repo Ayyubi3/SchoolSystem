@@ -3,6 +3,10 @@ require("dotenv").config()
 const express = require('express')
 const app = express()
 
+
+const { Database, DatabaseUtils } = require("./utils/Database.utils")
+Database.init()
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 

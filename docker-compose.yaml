@@ -2,12 +2,15 @@ version: "3"
 services: 
   database:
     image: postgres
+    restart: always
     environment:
       POSTGRES_PASSWORD: schoolsystem
       POSTGRES_USER: schoolsystem
       POSTGRES_DB: schoolsystem
     volumes:
       - ./src/schema:/docker-entrypoint-initdb.d 
+    ports:
+      - 5432:5432
   webserver:
     build: .
     depends_on:
@@ -17,7 +20,7 @@ services:
     ports:
       - 3000:3000
 
-
+      # FIXME: Instead of .env set environment here
 
 
 
