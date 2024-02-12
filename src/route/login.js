@@ -5,7 +5,7 @@ const router = express.Router()
 router
 
 
-  .get("/register", (req, res) => {
+  .get("/login", (req, res) => {
     res.send("xx")
   })
 
