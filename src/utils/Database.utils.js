@@ -5,17 +5,22 @@ class Database {
   static pool = null
 
   static async init() {
-    await new Promise(resolve => setTimeout(resolve, 5000));
-    await (async () => {
-      this.pool = new Pool()
-      const client = await this.pool.connect()
-      try {
-        const result = await client.query(`SELECT NOW()`)
-        console.log(`database test: ${JSON.stringify(result.rows[0])}`)
-      } finally {
-        client.release()
-      }
-    })().catch(e => console.error(e.message, e.stack))
+    let attempt = 5
+    while (attempt > 0) {
+      attempt--
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      await (async () => {
+        this.pool = new Pool()
+        const client = await this.pool.connect()
+        try {
+          const result = await client.query(`SELECT NOW()`)
+          console.log(`database test: ${JSON.stringify(result.rows[0])}`)
+          attempt = 0
+        } finally {
+          client.release()
+        }
+      })().catch(e => console.error(e.message, e.stack))
+    }
 
     this.pool.on("connect", (client) => {
       console.log("DATABASE: Client connected")
