@@ -2,16 +2,27 @@ version: "3"
 services: 
   database:
     image: postgres
+    restart: always
     environment:
       POSTGRES_PASSWORD: schoolsystem
       POSTGRES_USER: schoolsystem
       POSTGRES_DB: schoolsystem
     volumes:
-      - /home/ayyubi/SchoolSystem/schema:/docker-entrypoint-initdb.d 
+      - ./src/schema:/docker-entrypoint-initdb.d 
+    ports:
+      - 5432:5432
   webserver:
-    image: schoolsystemdocker 
+    build: .
+    depends_on:
+      - database
     volumes: 
-      - .:/home/ayyubi/SchoolSystem
+      - .:/app
     ports:
       - 3000:3000
-      - 3001:3001
+
+      # FIXME: Instead of .env set environment here
+
+
+
+      # FIXME: https://docs.docker.com/compose/compose-file/05-services/#healthcheck
+      # Maybe start containers with healthchecks
