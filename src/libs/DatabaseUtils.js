@@ -1,57 +1,65 @@
 const { Pool } = require("pg")
 
+const bcrypt = require('bcrypt')
+
+
 class Database {
+
 
   static pool = null
 
   static async init() {
-    let attempt = 5
-    while (attempt > 0) {
-      attempt--
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      await (async () => {
-        this.pool = new Pool()
-        const client = await this.pool.connect()
-        try {
-          const result = await client.query(`SELECT NOW()`)
-          console.log(`database test: ${JSON.stringify(result.rows[0])}`)
-          attempt = 0
-        } finally {
-          client.release()
-        }
-      })().catch(e => console.error(e.message, e.stack))
-    }
+    logger.info("Database.init()")
 
-    this.pool.on("connect", (client) => {
-      console.log("DATABASE: Client connected")
-    })
-    this.pool.on("error", (err, client) => {
-      console.log(`DATABASE: Client error: ${err}`)
-    })
+
+    try {
+
+      this.pool = new Pool({
+        user: process.env.DBUSER,
+        host: process.env.DBHOST,
+        database: process.env.DBDATABASE,
+        password: process.env.DBPASSWORD,
+        port: process.env.DBPORT,
+        max: 10,
+      })
+      //
+
+
+      console.log(await this.pool.query("SELECT NOW()"))
+
+    } catch (error) {
+      logger.error(error)
+    }
   }
+
 
   static async exec(inpt, args) {
 
-    console.log(
+    logger.info(
       `Database.exec = Prompt: ${inpt} | Args: ${args}`
     )
 
     try {
       let data = await this.pool.query(inpt, args)
-      console.log(`DatabaseOutput: ${data.rows}`)
-      return [data, false]
+      logger.debug(JSON.stringify(data))
+      return [data, null]
     } catch (error) {
-      console.log(`DatabaseError: ${error}`)
-      return [false, error]
+      logger.error(error)
+      return [null, error]
     }
   }
+
+
+
 }
 
-const bcrypt = require("bcrypt")
+// Error means something unexpected happened
+// If createUser failed bc of a missing input, its an error
+
 class DatabaseUtils {
 
   static async createUser(firstname, lastname, email, password) {
-    console.log(`Create user: ${firstname}, ${lastname}, ${email}, ${password}`)
+    logger.info(`Create user: ${firstname}, ${lastname}, ${email}, ${password}`)
 
 
     let somethingsMissing = false
@@ -139,7 +147,7 @@ class DatabaseUtils {
   static async createCourse(name, html_markdown_code, creator_id) {
 
 
-    console.log("Create course: ", name, html_markdown_code, creator_id)
+    logger.info("Create course: ", name, html_markdown_code, creator_id)
 
 
     let somethingsMissing = false
@@ -228,10 +236,10 @@ class DatabaseUtils {
 
   static async userJoinCourse_b(course_id, user_id) {
 
-    console.log("User join course: " + course_id + user_id)
+    logger.info("User join course: " + course_id + user_id)
 
     if (!course_id || !user_id) {
-      console.log("input is missing")
+      logger.error("input is missing")
       return false
     }
 
@@ -247,10 +255,10 @@ class DatabaseUtils {
 
   static async userLeaveCourse_b(user_id) {
 
-    console.log("User leave course: " + user_id)
+    logger.info("User leave course: " + user_id)
 
     if (!user_id) {
-      console.log("input is missing")
+      logger.error("input is missing")
       return false
     }
 
