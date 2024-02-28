@@ -26,64 +26,16 @@ School System is a web application designed to empower teachers to provide acces
 ### Prerequisites
 
 - Node.js and npm: [Download and install Node.js](https://nodejs.org/).
-- PostgreSQL: [Download and install PostgreSQL](https://www.postgresql.org/).
+- Docker compose
 
-### Used technologies
-- https://www.npmjs.com/package/express
-- https://www.npmjs.com/package/passport
-- https://www.npmjs.com/package/ejs
-- https://www.npmjs.com/package/socket.io
-- https://www.npmjs.com/package/pg
+Need to update bc of rewrite in other branch
+
+```
+git clone https://github.com/Eyup3/SchoolSystem.git
+cd SchoolSystem
+sudo npm i
+sudo docker compose up -d database
+sudo npm run dev
+
+```
   
-### Installation
-
-1. Clone the repository:
-
-   ```bash
-   git clone https://github.com/Eyup3/SchoolSystem.git
-   ```
-
-1. Change into the project directory:
-
-    ```bash
-    cd SchoolSystem
-    ```
-
-
-1. Install dependencies:
-
-    ```bash
-    npm i
-    ```
-
-
-1. Set up the database:
-    ```bash
-    psql -U <username> -d <dbname> -a -f path/to/Schema.sql
-    ```
-
-1. Set up .env file
-
-    Create .env file with the following data
-
-    ```
-    SERVER_PORT=
-    SESSION_SECRET=67fda908f8790afa987 #example key
-
-    DBUSER=
-    DBHOST=
-    DBDATABASE=
-    DBPASSWORD=
-    DBPORT=
-
-
-    ENV=DEV #DEV/PROD
-    ```
-docker build -t schoolsystemdocker
-docker compose up
-
-1. Run the application:
-
-    ```bash
-    npm run dev
-    ```
